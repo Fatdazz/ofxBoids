@@ -72,73 +72,6 @@ void Boid2d::bounds() {
 
 
 
-
-
-
-
-void Boid2d:: update(const float amount) {
-	
-	// float vec[] = flock(amount);// flockfull(amount);
-	//float * vec = flockfull(amount);
-	
-	// reset acc on begin 2 draw
-	ax = 0;
-	ay = 0;
-	
-	
-	float *vec = new float[2];	
-	vec[0] = 0.0f;
-	vec[1] = 0.0f;
-	
-//	flock(amount, vec);
-	flockfull(amount, vec);
-	
-	ax += vec[0];// *amount;
-	ay += vec[1];// *amount;
-	
-	delete [] vec;
-	
-	// change this to allow flock flock interaction
-	// accX = vec[0];
-	// accY = vec[1];
-	
-	// limit force
-	float distMaxForce = ABS(ax) + ABS(ay);
-	if (distMaxForce > flockPtr->maxForce) {
-		distMaxForce = flockPtr->maxForce / distMaxForce;
-		ax *= distMaxForce;
-		ay *= distMaxForce;
-	}
-	
-	vx += ax;
-	vy += ay;
-	// limit speed
-	float distMaxSpeed = ABS(vx) + ABS(vy);
-	if (distMaxSpeed > flockPtr->maxSpeed) {
-		distMaxSpeed = flockPtr->maxSpeed / distMaxSpeed;
-		vx *= distMaxSpeed;
-		vy *= distMaxSpeed;
-	}
-	
-	x += vx * amount;
-	y += vy * amount;
-	
-	bounds();
-	
-	// reset acc on end
-//	ax = 0;
-//	ay = 0;
-}
-
-
-
-
-
-
-
-
-
-
 float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
 	
 //	float steer[] = {0.f, 0.f}; //new float[2];
@@ -337,150 +270,9 @@ float* Boid2d::flock(const float amount, float *vec) {
 
 
 
-float* Boid2d::flockfull(const float amount, float *vec) {
-//	float * vec = new float[2];
-	
-	float *sep = new float[2];
-	float *ali = new float[2];
-	float *coh = new float[2];
-	float *attrForce = new float[2];
-	
-	sep[0] = 0.0f;
-	sep[1] = 0.0f;
-	ali[0] = 0.0f;
-	ali[1] = 0.0f;
-	coh[0] = 0.0f;
-	coh[1] = 0.0f;
-	attrForce[0] = 0.0f;
-	attrForce[1] = 0.0f;
-	
-	
-	
-//	float attrForce[] = {0.f, 0.f}; //new float[2];
-	int countsep = 0, countali = 0, countcoh = 0;
-	
-	float separatedist = flockPtr->distSeparation;
-	float aligndist = flockPtr->distAlign;
-	float cohesiondist = flockPtr->distCohesion;
-	float invD = 0;
-	
-	// boolean hasAttractionPoints = flock.hasAttractionPoints();
-	
-	// main full loop track all forces boid other boids
-	for (int i = 0; i < flockPtr->boids.size(); i++) {
-		Boid2d * other = flockPtr->boids.at(i);
-		float dx = other->x - x;
-		float dy = other->y - y;
-		float d = ABS(dx) + ABS(dy);
-		if (d <= 1e-7)
-			continue;
-		
-		// sep
-		if (d < separatedist) {
-			countsep++;
-			invD = 1.f / d;
-			sep[0] -= dx * invD;
-			sep[1] -= dy * invD;
-		}
-		
-		// coh
-		if (d < cohesiondist) {
-			countcoh++;
-			coh[0] += other->x;
-			coh[1] += other->y;
-		}
-		
-		// ali
-		if (d < aligndist) {
-			countali++;
-			ali[0] += other->vx;
-			ali[1] += other->vy;
-		}
-		
-	}
-	// travailler sur un leader !! 
-	if (countsep > 0) {
-		const float invForSep = flockPtr->separate / (float) countsep;
-		sep[0] *= invForSep;
-		sep[1] *= invForSep;
-	}
-	if (countali > 0) {
-		// final float invForAli = 1f / (float) countali;
-		const float invForAli = flockPtr->align / (float) countali;
-		ali[0] *= invForAli;
-		ali[1] *= invForAli;
-	}
-	if (countcoh > 0) {
-		const float invForCoh = flockPtr->cohesion / (float) countcoh;
-		coh[0] *= invForCoh;
-		coh[1] *= invForCoh;
-		coh = steer(coh, 1);
-	}
-	
-	// if using extra forces, place here
-	
-	// sep[0] *= flock.separate;
-	// sep[1] *= flock.separate;
-	//
-	// ali[0] *= flock.align;
-	// ali[1] *= flock.align;
-	//
-	// coh[0] *= flock.cohesion;
-	// coh[1] *= flock.cohesion;
-	
-	// other forces
-	if (flockPtr->hasAttractionPoints()) {
-		for (int i = 0; i < flockPtr->attractionPoints.size(); i++) {
-			AttractionPoint2d * point = flockPtr->attractionPoints.at(i);
-			float dx = point->x - x;
-			float dy = point->y - y;
-			float d = ABS(dx) + ABS(dy);
-			if (d <= 1e-7)
-				continue;
-			if (d > point->sensorDist)
-				continue;
-			
-			// inbounds, calc
-			float invForce = point->force  / d  * attr;// newww   ////flockPtr->attraction     ; // neww
-			dx *= invForce;
-			dy *= invForce;
-			
-			attrForce[0] += dx;
-			attrForce[1] += dy;
-		}
-		
-	}
-	
-	vec[0] = sep[0] + ali[0] + coh[0] + attrForce[0];
-	vec[1] = sep[1] + ali[1] + coh[1] + attrForce[1];
-	const float d = ABS(vec[0]) + ABS(vec[1]);
-	if (d > 0) {
-		float invDist = amount / d;
-		vec[0] *= invDist;
-		vec[1] *= invDist;
-	}
-	
-	
-	
-	vec[0] *= amount;
-	vec[1] *= amount;
-	
-	
-	delete[] sep;
-	delete[] ali;
-	delete[] coh;	
-	delete[] attrForce;
-	
-	
-	
-	return vec;
-}
-
-
-
 //////////////////// code Alex update /////////////////
 
-void Boid2d:: updateAlex(const float amount) {
+void Boid2d:: update(const float amount) {
     
     // float vec[] = flock(amount);// flockfull(amount);
     //float * vec = flockfull(amount);
@@ -495,7 +287,7 @@ void Boid2d:: updateAlex(const float amount) {
     vec[1] = 0.0f;
     
     //	flock(amount, vec);
-    flockfullAlex(amount, vec);
+    flockfull(amount, vec);
     
     ax += vec[0];// *amount;
     ay += vec[1];// *amount;
@@ -537,7 +329,7 @@ void Boid2d:: updateAlex(const float amount) {
 
 /////////// code alex flockfull /////////////////
 
-float* Boid2d::flockfullAlex(const float amount, float *vec) {
+float* Boid2d::flockfull(const float amount, float *vec) {
     //	float * vec = new float[2];
     
     float *sep = new float[2];
@@ -570,9 +362,9 @@ float* Boid2d::flockfullAlex(const float amount, float *vec) {
         
         
             
-            float separatedist = other->distSeparationAlex;
-            float aligndist = other->distAlignAlex;
-            float cohesiondist = other->distCohesionAlex;
+            float separatedist = other->distSeparationGroup;
+            float aligndist = other->distAlignGroup;
+            float cohesiondist = other->distCohesionGroup;
             
             float dx = other->x - x;
             float dy = other->y - y;
@@ -584,23 +376,23 @@ float* Boid2d::flockfullAlex(const float amount, float *vec) {
             if (d < separatedist) {
                 countsep++;
                 invD = 1.f / d;
-                sep[0] -= dx * invD * other->separateAlex;
-                sep[1] -= dy * invD * other->separateAlex;
+                sep[0] -= dx * invD * other->separateGroup;
+                sep[1] -= dy * invD * other->separateGroup;
             }
         
             if (other->group== group) {
             // coh
             if (d < cohesiondist) {
                 countcoh++;
-                coh[0] += other->x * other->cohesionAlex;
-                coh[1] += other->y * other->cohesionAlex;
+                coh[0] += other->x * other->cohesionGroup;
+                coh[1] += other->y * other->cohesionGroup;
             }
             
             // ali
             if (d < aligndist) {
                 countali++;
-                ali[0] += other->vx * other->alignAlex;
-                ali[1] += other->vy * other->alignAlex;
+                ali[0] += other->vx * other->alignGroup;
+                ali[1] += other->vy * other->alignGroup;
             }
         }
         
@@ -637,6 +429,8 @@ float* Boid2d::flockfullAlex(const float amount, float *vec) {
     // coh[0] *= flock.cohesion;
     // coh[1] *= flock.cohesion;
     
+    
+    
     // other forces
     if (flockPtr->hasAttractionPoints()) {
         for (int i = 0; i < flockPtr->attractionPoints.size(); i++) {
@@ -660,6 +454,41 @@ float* Boid2d::flockfullAlex(const float amount, float *vec) {
         }
         
     }
+    
+    if (flockPtr->hasAttractionLines()) {
+        for (int i=0; i<flockPtr->attractionLines.size(); i++) {
+            AttractionLine2d * line =flockPtr->attractionLines.at(i);
+            
+            float AP[2];
+            AP[0] = x - line->a[0];
+            AP[1] = y - line->a[1];
+            float ti = ( line->u[0] * AP[0] + line->u[1] * AP[1])/( line->u[0] * line->u[0] + line->u[1] * line->u[1]);
+            AP[0] = line->a[0] + ti * line->u[0];
+            AP[1] = line->a[1] + ti * line->u[1];
+            
+            float dx = AP[0] - x;
+            float dy = AP[1] - y;
+            float d = ABS(dx) + ABS(dy);
+            
+            
+            if (d <= 1e-7)
+                continue;
+            if (d > line->sensorDist)
+                continue;
+            
+            float invForce = line->force  / d  * attr;// newww   ////flockPtr->attraction     ; // neww
+            dx *= invForce;
+            dy *= invForce;
+            
+            attrForce[0] += dx;
+            attrForce[1] += dy;
+            
+            
+            
+
+        }
+    }
+    
     
     vec[0] = sep[0] + ali[0] + coh[0] + attrForce[0];
     vec[1] = sep[1] + ali[1] + coh[1] + attrForce[1];

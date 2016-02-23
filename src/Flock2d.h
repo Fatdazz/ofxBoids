@@ -42,6 +42,7 @@ public:
 	
 	vector <Boid2d *>				boids;
 	vector <AttractionPoint2d *>	attractionPoints;
+    vector<AttractionLine2d *>      attractionLines;
 
 	// public ArrayList<Team> teams; // superclass flockTeam, etc
 
@@ -110,7 +111,7 @@ public:
         for (int i = 0; i < num; i++) {
             Boid2d * b = new Boid2d(this);
             // need to be scattered or else no work
-            b->setValALex(lx+ ofRandom(-dev, dev),
+            b->setVal(lx+ ofRandom(-dev, dev),
                           ly+ ofRandom(-dev, dev),
                           lsepa,
                           lalig,
@@ -342,7 +343,7 @@ public:
 		int boidsSize = boids.size();
 		for (int i = 0; i < boidsSize; i++) {
 //			Boid2d *b = boids.get(i);
-			boids[i]->updateAlex(dt);
+			boids[i]->update(dt);
 		}
 	}
 
@@ -387,6 +388,10 @@ public:
 	bool hasAttractionPoints() {
 		return attractionPoints.size() > 0;
 	}
+    
+    bool hasAttractionLines() {
+        return attractionLines.size() > 0;
+    }
 
 	void changeAttractionPoint(int id, float x, float y, float force,
 			float sensorDist) {

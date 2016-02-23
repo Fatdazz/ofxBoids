@@ -27,6 +27,49 @@
 #pragma once
 
 
+
+class AttractionLine2d {
+public:
+    float a[2],b[2],u[2];
+    float force, sensorDist, lengthZone;
+    int group;
+    
+    
+    AttractionLine2d() {
+        a[0] = a[1] = b[0] = b[1] = u[0] = u[1] = force = sensorDist =  0.0f;
+        group=0;
+    }
+    
+    AttractionLine2d(float _a[2], float _b[2], float _force, float _sensorDist, float _lengthZone, int _group){
+        a[0] = _a[0];
+        a[1] = _a[1];
+        b[0] = _b[0];
+        b[1] = _b[1];
+        force = _force;
+        sensorDist = _sensorDist;
+        lengthZone = _lengthZone;
+        VecteurU();
+        group = _group;
+        
+    }
+
+    
+    void VecteurU(){
+        u[0] = b[0] - a[0];
+        u[1] = b[1] - a[1];
+    
+    }
+
+    
+};
+
+
+
+
+
+
+
+
 class AttractionPoint2d {
 public:
 	

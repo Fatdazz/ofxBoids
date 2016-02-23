@@ -44,8 +44,8 @@ public:
 	int life;
 	
     // new vabiable alex
-    float separateAlex, alignAlex, cohesionAlex;
-    float distSeparationAlex, distAlignAlex, distCohesionAlex;
+    float separateGroup, alignGroup, cohesionGroup;
+    float distSeparationGroup, distAlignGroup, distCohesionGroup;
     float maxTurnAlex, maxSpeedAlex, maxForceAlex;
     float attractionAlex,attractiondeviationAlex;
     int group;
@@ -68,12 +68,12 @@ public:
         
         // new vabiable alex
         
-        separateAlex = 20.0f;
-        alignAlex = 12.0f;
-        cohesionAlex = 3.0f;
-        distSeparationAlex = 10.0f;
-        distAlignAlex = 20.0f;
-        distCohesionAlex= 25.0f;
+        separateGroup= 20.0f;
+        alignGroup = 12.0f;
+        cohesionGroup = 3.0f;
+        distSeparationGroup = 10.0f;
+        distAlignGroup = 20.0f;
+        distCohesionGroup= 25.0f;
         maxSpeedAlex = 2.f;
         maxForceAlex = 10.0f;
         attractionAlex = 100.5f;
@@ -92,20 +92,20 @@ public:
 		return this;
 	}
 ////// set Valeurs alex
-    Boid2d * setValALex(float lx, float ly,
-                        float lsepa,float lalig, float lcohe,
-                        float ldistSepa,float ldistAlig, float ldistCohe,
-                        float lmaxSpeed, float lmaxForce,
-                        float lattraction, float lattractiondeviation,
-                        int lgroup) {
+    Boid2d * setVal(float lx, float ly,
+                    float lsepa,float lalig, float lcohe,
+                    float ldistSepa,float ldistAlig, float ldistCohe,
+                    float lmaxSpeed, float lmaxForce,
+                    float lattraction, float lattractiondeviation,
+                    int lgroup) {
         x = lx;
         y = ly;
-        separateAlex = lsepa;
-        alignAlex = lalig;
-        cohesionAlex = lcohe;
-        distSeparationAlex = ldistSepa;
-        distAlignAlex = ldistAlig;
-        distCohesionAlex= ldistCohe;
+        separateGroup = lsepa;
+        alignGroup = lalig;
+        cohesionGroup = lcohe;
+        distSeparationGroup = ldistSepa;
+        distAlignGroup = ldistAlig;
+        distCohesionGroup= ldistCohe;
         maxSpeedAlex = lmaxSpeed;
         maxForceAlex = lmaxForce;
         attractionAlex = lattraction;
@@ -127,9 +127,8 @@ public:
 	/*
 	 * main funcs
 	 */
-	
-	void update(const float amount);		
-    void updateAlex(const float amount);
+			
+    void update(const float amount);
     
 	float* flock(const float amount, float *vec) ;
 	
@@ -147,7 +146,6 @@ public:
 	 * integration of all forces in single eq now with attraction points builtin
 	 */
 	
-	float* flockfull(const float amount, float *vec) ;
-    float* flockfullAlex(const float amount, float *vec);
+    float* flockfull(const float amount, float *vec);
 		
 };
