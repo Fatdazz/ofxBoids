@@ -1,0 +1,3 @@
+ofxBoids
+ofxGui
+ofxXmlSettings
