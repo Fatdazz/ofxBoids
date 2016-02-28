@@ -34,35 +34,38 @@
 
 #pragma once
 #include <cstddef>
+#include <cstdlib>
+#include <ctime>
+
 
 class Flock2d;
 
 class Boid2d {
 public:
-	
+///////////////////////////////////////////////////////////////////
 	float x, y, vx, vy, ax, ay;
 	int life;
-	
-    // new vabiable alex
+    bool lead;
+    int group;
+    
     float separateGroup, alignGroup, cohesionGroup;
     float distSeparationGroup, distAlignGroup, distCohesionGroup;
     float maxTurnAlex, maxSpeedAlex, maxForceAlex;
     float attractionAlex,attractiondeviationAlex;
-    int group;
-    // fin new variable alex
+    
+    
+    float separateNoGroup, distSeparationNoGroup;
+    float alignNoGroup, distAlignNoGroup;
     
     float attr;
-	
-	Flock2d * flockPtr;
-	
-	// public Team team;
-	// public int om;
-	// public float forceSeparate, forceAlign, forceCohesion;
-	// public float maxTurn, maxSpeed, maxForce;
-	
+    
+Flock2d * flockPtr;
+///////////////////////////////////////////////////////////////////
+    
+ 
 	Boid2d() {
 		x = y = vx = vy = ax = ay = 0.0f;
-		life = 0;
+		life = 1;
 		flockPtr = NULL;
 		attr = 0.0f;
         
@@ -79,50 +82,112 @@ public:
         attractionAlex = 100.5f;
         attractiondeviationAlex =0.0f;
         group=0;
-        // fin new variable alex
+        
 	}
+    
+    
 	
 	Boid2d(Flock2d * flock);
 	
 	Boid2d * setFlock(Flock2d * flock);
 	
-	Boid2d * setLoc(float lx, float ly) {
-		x = lx;
-		y = ly;
-		return this;
-	}
-////// set Valeurs alex
-    Boid2d * setVal(float lx, float ly,
-                    float lsepa,float lalig, float lcohe,
-                    float ldistSepa,float ldistAlig, float ldistCohe,
-                    float lmaxSpeed, float lmaxForce,
-                    float lattraction, float lattractiondeviation,
-                    int lgroup) {
-        x = lx;
-        y = ly;
-        separateGroup = lsepa;
-        alignGroup = lalig;
-        cohesionGroup = lcohe;
-        distSeparationGroup = ldistSepa;
-        distAlignGroup = ldistAlig;
-        distCohesionGroup= ldistCohe;
-        maxSpeedAlex = lmaxSpeed;
-        maxForceAlex = lmaxForce;
-        attractionAlex = lattraction;
-        attractiondeviationAlex = lattractiondeviation;
-        group = lgroup;
+
+////// set Valeurs
+    Boid2d * setValTotal(float _x, float _y,
+                    float _sepa,float _alig, float _cohe,
+                    float _distSepa,float _distAlig, float _distCohe,
+                    float _maxSpeed, float _maxForce,
+                    float _attraction, float _attractiondeviation,
+                    int _group) {
+
+        this->setLoc(_x, _y);
+        this->setGroup(_group);
+        //this->setLead(_lead);
+        this->setValSepa(_sepa, _distSepa);
+        this->setValCohe(_cohe, _distCohe);
+        this->setValAlig(_alig, _distAlig);
+        maxSpeedAlex = _maxSpeed;
+        maxForceAlex = _maxForce;
+        this->setValAttraction(_attraction, _attractiondeviation);
+        //this->setValAlignNoGroup(<#float _alignNoGroup#>, <#float _distAlignNoGroup#>);
+        //this->setValSepaNoGroup(<#float _sepaNoGroup#>, );
         return this;
     }
+    
+    Boid2d * setLead( bool _lead){
+        lead=_lead;
+        return this;
+    }
+    
+    Boid2d * setGroup(int _group){
+        group=_group;
+        return this;
+    }
+    
+    Boid2d * setLoc(float _x, float _y) {
+        x = _x;
+        y = _y;
+        return this;
+    }
+    
+    Boid2d * setVel(float _vx, float _vy) {
+        vx = _vx;
+        vy = _vy;
+        return this;
+    }
+    
+    Boid2d * setValSepa(float _sepa, float _distSepa){
+        separateGroup = _sepa;
+        distSeparationGroup = _distSepa;
+        return this;
+    }
+    
+    Boid2d * setValAlig(float _alig, float _distAlig){
+        alignGroup = _alig;
+        distAlignGroup = _distAlig;
+        return this;
+    }
+    
+    Boid2d * setValCohe(float _cohe, float _distCohe){
+        cohesionGroup = _cohe;
+        distCohesionGroup = _distCohe;
+        return this;
+    }
+    
+    Boid2d * setMaxSpeed(float _maxSpeed){
+        maxSpeedAlex=_maxSpeed;
+        return this;
+    }
+    
+    Boid2d * setMaxForce(float _maxForce){
+        maxForceAlex=_maxForce;
+        return this;
+    }
+    
+    Boid2d * setValAttraction(float _attraction, float _attractiondeviation){
+        attractionAlex=_attraction;
+        attractiondeviationAlex=_attractiondeviation;
+        return this;
+    }
+    
+    Boid2d * setValSepaNoGroup(float _sepaNoGroup, float _distSeparateNoGroup){
+        separateNoGroup=_sepaNoGroup;
+        distAlignNoGroup=_distSeparateNoGroup;
+        return this;
+    }
+    
+    Boid2d * setValAlignNoGroup(float _alignNoGroup, float _distAlignNoGroup){
+        alignNoGroup=_alignNoGroup;
+        distAlignNoGroup=_distAlignNoGroup;
+        return this;
+    }
+    
+    
 ////// fin set Valeurs alex
 
 
-	Boid2d * setVel(float velx, float vely) {
-		vx = velx;
-		vy = vely;
-		return this;
-	}
-	
-	void bounds();
+
+    void bounds();
 	
 	/*
 	 * main funcs
@@ -138,13 +203,7 @@ public:
 	float* cohesion( float *vec);	
 	float* align( float *vec) ;		
 	float* separate( float *vec) ;
-	
-	
-	
-	
-	/*
-	 * integration of all forces in single eq now with attraction points builtin
-	 */
+
 	
     float* flockfull(const float amount, float *vec);
 		
