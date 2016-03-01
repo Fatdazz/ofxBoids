@@ -36,6 +36,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <ctime>
+//#include "opencv2/opencv.hpp"
 
 
 class Flock2d;
@@ -102,15 +103,15 @@ Flock2d * flockPtr;
 
         this->setLoc(_x, _y);
         this->setGroup(_group);
-        //this->setLead(_lead);
+        this->setLead(false);
         this->setValSepa(_sepa, _distSepa);
         this->setValCohe(_cohe, _distCohe);
         this->setValAlig(_alig, _distAlig);
         maxSpeedAlex = _maxSpeed;
         maxForceAlex = _maxForce;
         this->setValAttraction(_attraction, _attractiondeviation);
-        //this->setValAlignNoGroup(<#float _alignNoGroup#>, <#float _distAlignNoGroup#>);
-        //this->setValSepaNoGroup(<#float _sepaNoGroup#>, );
+        this->setValAlignNoGroup(20, 20);
+        this->setValSepaNoGroup(20,20);
         return this;
     }
     
@@ -188,6 +189,8 @@ Flock2d * flockPtr;
 
 
     void bounds();
+    
+    void boudsColision();
 	
 	/*
 	 * main funcs

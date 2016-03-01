@@ -12,14 +12,11 @@
 #include "Flock2d.h"
 
 
-
 Boid2d::Boid2d(Flock2d * flock) {
 		Boid2d();
 	this->flockPtr = flock;
 	
 }
-
-
 
 
 Boid2d * Boid2d::setFlock(Flock2d * flock) {
@@ -69,7 +66,18 @@ void Boid2d::bounds() {
 }
 
 
+void Boid2d::boudsColision(){
+    if (0==0) {
+        
+        //// ATENTION CODE FAUT !!!
+        //// faire code de colission en !! 0==0
+        
+        this->vx=-this->vx;
+        this->vy=-this->vy;
+    
+    }
 
+}
 
 
 float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
@@ -217,7 +225,6 @@ float* Boid2d::separate(float *vec) {
 
 
 float* Boid2d::flock(const float amount, float *vec) {
-    std::srand(std::time(0));
 	//	float * vec = new float[2];
 	
 	float *sep = new float[2];
@@ -273,7 +280,7 @@ float* Boid2d::flock(const float amount, float *vec) {
 //////////////////// code Alex update /////////////////
 
 void Boid2d:: update(const float amount) {
-    
+    std::srand(std::time(0));
     // float vec[] = flock(amount);// flockfull(amount);
     //float * vec = flockfull(amount);
     
@@ -306,8 +313,8 @@ void Boid2d:: update(const float amount) {
         ay *= distMaxForce;
     }
     
-    //vx += ax + (rand()%200 -100)/100 * 0.5;
-    //vy += ay + (rand()%200 -100)/100 * 0.5;
+    //vx += ax + (rand()%200 -100)/100 * 1.5;
+    //vy += ay + (rand()%200 -100)/100 * 1.5;
 
     vx += ax;
     vy += ay;
@@ -372,12 +379,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
     for (int i = 0; i < flockPtr->boids.size(); i++) {
         Boid2d * other = flockPtr->boids.at(i);
         
-        if (other->lead) {
-            continue;
-            cout << " I am a leader !!! "<< endl;
-        }
 
-            
             float separatedist = other->distSeparationGroup;
             float aligndist = other->distAlignGroup;
             float cohesiondist = other->distCohesionGroup;
@@ -401,8 +403,16 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             // coh
             if (d < cohesiondist) {
                 countcoh++;
+                if (other->lead) {
+                     /// a modif
+                    coh[0] += other->x * other->cohesionGroup * d/20;
+                    coh[1] += other->y * other->cohesionGroup * d/20;
+                    cout << " I am a leader !!! "<< endl;
+                }
+                else{
                 coh[0] += other->x * other->cohesionGroup;
                 coh[1] += other->y * other->cohesionGroup;
+                }
             }
             
             // ali
