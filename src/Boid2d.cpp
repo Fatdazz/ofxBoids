@@ -12,14 +12,11 @@
 #include "Flock2d.h"
 
 
-
 Boid2d::Boid2d(Flock2d * flock) {
 		Boid2d();
 	this->flockPtr = flock;
 	
 }
-
-
 
 
 Boid2d * Boid2d::setFlock(Flock2d * flock) {
@@ -69,7 +66,18 @@ void Boid2d::bounds() {
 }
 
 
+void Boid2d::boudsColision(){
+    if (0==0) {
+        
+        //// ATENTION CODE FAUT !!!
+        //// faire code de colission en !! 0==0
+        
+        this->vx=-this->vx;
+        this->vy=-this->vy;
+    
+    }
 
+}
 
 
 float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
@@ -217,18 +225,6 @@ float* Boid2d::separate(float *vec) {
 
 
 float* Boid2d::flock(const float amount, float *vec) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	
->>>>>>> parent of 42b1788... motif fonction et début de code
-=======
-    std::srand(std::time(0));
->>>>>>> parent of d2d0dfd... motif pour lulu :)
-=======
-    std::srand(std::time(0));
->>>>>>> parent of d2d0dfd... motif pour lulu :)
 	//	float * vec = new float[2];
 	
 	float *sep = new float[2];
@@ -284,7 +280,7 @@ float* Boid2d::flock(const float amount, float *vec) {
 //////////////////// code Alex update /////////////////
 
 void Boid2d:: update(const float amount) {
-    
+    std::srand(std::time(0));
     // float vec[] = flock(amount);// flockfull(amount);
     //float * vec = flockfull(amount);
     
@@ -317,25 +313,15 @@ void Boid2d:: update(const float amount) {
         ay *= distMaxForce;
     }
     
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     //vx += ax + (rand()%200 -100)/100 * 1.5;
     //vy += ay + (rand()%200 -100)/100 * 1.5;
-=======
-    //vx += ax + (rand()%200 -100)/100 * 0.5;
-    //vy += ay + (rand()%200 -100)/100 * 0.5;
->>>>>>> parent of d2d0dfd... motif pour lulu :)
-=======
-    //vx += ax + (rand()%200 -100)/100 * 0.5;
-    //vy += ay + (rand()%200 -100)/100 * 0.5;
->>>>>>> parent of d2d0dfd... motif pour lulu :)
 
-=======
->>>>>>> parent of 42b1788... motif fonction et début de code
     vx += ax;
     vy += ay;
+    
     // limit speed
+    
+    
     float distMaxSpeed = ABS(vx) + ABS(vy);
     if (distMaxSpeed > maxSpeedAlex) {
         distMaxSpeed = maxSpeedAlex / distMaxSpeed;
@@ -345,6 +331,12 @@ void Boid2d:: update(const float amount) {
     
     x += vx * amount;
     y += vy * amount;
+    
+    //x += ((rand()%200)-100)/100 * 5;
+    //y += ((rand()%200)-100)/100 * 5;
+    
+    
+    
     
     bounds();
     
@@ -387,27 +379,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
     for (int i = 0; i < flockPtr->boids.size(); i++) {
         Boid2d * other = flockPtr->boids.at(i);
         
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-        
-            
->>>>>>> parent of 42b1788... motif fonction et début de code
-=======
-=======
->>>>>>> parent of d2d0dfd... motif pour lulu :)
-        if (other->lead) {
-            continue;
-            cout << " I am a leader !!! "<< endl;
-        }
-
-            
-<<<<<<< HEAD
->>>>>>> parent of d2d0dfd... motif pour lulu :)
-=======
->>>>>>> parent of d2d0dfd... motif pour lulu :)
             float separatedist = other->distSeparationGroup;
             float aligndist = other->distAlignGroup;
             float cohesiondist = other->distCohesionGroup;
@@ -417,7 +389,8 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             float d = ABS(dx) + ABS(dy);
             if (d <= 1e-7)
                 continue;
-            
+        
+        if (other->group== group) {
             // sep
             if (d < separatedist) {
                 countsep++;
@@ -426,12 +399,20 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                 sep[1] -= dy * invD * other->separateGroup;
             }
         
-            if (other->group== group) {
+        
             // coh
             if (d < cohesiondist) {
                 countcoh++;
+                if (other->lead) {
+                     /// a modif
+                    coh[0] += other->x * other->cohesionGroup * d/20;
+                    coh[1] += other->y * other->cohesionGroup * d/20;
+                    cout << " I am a leader !!! "<< endl;
+                }
+                else{
                 coh[0] += other->x * other->cohesionGroup;
                 coh[1] += other->y * other->cohesionGroup;
+                }
             }
             
             // ali
@@ -442,9 +423,26 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             }
         }
         
+        else if (other->group==!group){
+            if (d < distSeparationNoGroup ) {
+                countsep++;
+                invD = 1.f / d;
+                sep[0] -= dx * invD * separateNoGroup;
+                sep[1] -= dy * invD * separateNoGroup;
+
+            }
+            if (d < distAlignNoGroup) {
+                countali++;
+                ali[0] -= other->vx * alignNoGroup;
+                ali[1] -= other->vy * alignNoGroup;
+                
+            }
+            
+        }
+        
         
     }
-    // travailler sur un leader !!
+
     
     if (countsep > 0) {
         const float invForSep = 1 / (float) countsep; // faire invForsep une moyenne
@@ -501,6 +499,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
         
     }
     
+    // attraction en linge a test� 
     if (flockPtr->hasAttractionLines()) {
         for (int i=0; i<flockPtr->attractionLines.size(); i++) {
             AttractionLine2d * line =flockPtr->attractionLines.at(i);
@@ -529,9 +528,6 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             attrForce[0] += dx;
             attrForce[1] += dy;
             
-            
-            
-
         }
     }
     

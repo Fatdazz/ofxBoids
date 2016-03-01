@@ -33,7 +33,6 @@
 #pragma once
 
 #include "ofMain.h"
-
 #include "Boid2d.h"
 #include "AttractionPoint2d.h"
 
@@ -101,29 +100,29 @@ public:
 	}
 /////////////////////////////////////////////// initAlex
     void initA(int num,
-               float lx, float ly, float dev,
-               float lsepa,float lalig, float lcohe,
-               float ldistSepa, float ldistAlig, float ldistCohe,
-               float lmaxSpeed, float lmaxForce,
-               float lattraction, float lattractiondeviation,
-               int lgroup) {
+               float _x, float _y, float dev,
+               float _sepa,float _alig, float _cohe,
+               float _distSepa, float _distAlig, float _distCohe,
+               float _maxSpeed, float _maxForce,
+               float _attraction, float _attractiondeviation,
+               int _group) {
         
         for (int i = 0; i < num; i++) {
             Boid2d * b = new Boid2d(this);
             // need to be scattered or else no work
-            b->setVal(lx+ ofRandom(-dev, dev),
-                          ly+ ofRandom(-dev, dev),
-                          lsepa,
-                          lalig,
-                          lcohe,
-                          ldistSepa,
-                          ldistAlig,
-                          ldistCohe,
-                          lmaxSpeed,
-                          lmaxForce,
-                          lattraction,
-                          lattractiondeviation,
-                          lgroup);
+            b->setValTotal(_x+ ofRandom(-dev, dev),
+                          _y+ ofRandom(-dev, dev),
+                          _sepa,
+                          _alig,
+                          _cohe,
+                          _distSepa,
+                          _distAlig,
+                          _distCohe,
+                          _maxSpeed,
+                          _maxForce,
+                          _attraction,
+                          _attractiondeviation,
+                          _group);
            
             boids.push_back(b);
         }
@@ -177,7 +176,7 @@ public:
 		
 		b->attr = attraction + ofRandom(-attractiondeviation, attractiondeviation);
 		
-		boids.push_back(b);//boids.add(b);
+		boids.push_back(b);
 		return this;
 	}
 
@@ -406,11 +405,15 @@ public:
 		} else {
 			cout << " attraction point null at id: " << id << endl;
 		}
-//		} catch (Exception e) {
-//			System.out.print("error in changeAttractionPoint \n");
-//		}
+
 	}
 	
+    void changeAttractionLine2d( int id, float _x){
+        AttractionLine2d * al = attractionLines[id];
+        
+        
+        
+    }
 	
 	
 	
