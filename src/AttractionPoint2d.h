@@ -40,12 +40,6 @@ public:
         group=0;
     }
     
-    void VecteurU(){
-        u[0] = b[0] - a[0];
-        u[1] = b[1] - a[1];
-        
-    }
-    
     AttractionLine2d(float _a[2], float _b[2], float _force, float _sensorDist, float _lengthZone, int _group){
         a[0] = _a[0];
         a[1] = _a[1];
@@ -58,13 +52,14 @@ public:
         group = _group;
         
     }
-    
 
     
-
-
+    void VecteurU(){
+        u[0] = b[0] - a[0];
+        u[1] = b[1] - a[1];
     
-    
+    }
+
     
 };
 

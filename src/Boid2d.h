@@ -34,39 +34,41 @@
 
 #pragma once
 #include <cstddef>
+<<<<<<< HEAD
 #include <cstdlib>
 #include <ctime>
-//#include "opencv2/opencv.hpp"
 
+=======
+>>>>>>> parent of 42b1788... motif fonction et début de code
 
 class Flock2d;
 
 class Boid2d {
 public:
-///////////////////////////////////////////////////////////////////
+	
 	float x, y, vx, vy, ax, ay;
 	int life;
-    bool lead;
-    int group;
-    
+	
+    // new vabiable alex
     float separateGroup, alignGroup, cohesionGroup;
     float distSeparationGroup, distAlignGroup, distCohesionGroup;
     float maxTurnAlex, maxSpeedAlex, maxForceAlex;
     float attractionAlex,attractiondeviationAlex;
-    
-    
-    float separateNoGroup, distSeparationNoGroup;
-    float alignNoGroup, distAlignNoGroup;
+    int group;
+    // fin new variable alex
     
     float attr;
-    
-Flock2d * flockPtr;
-///////////////////////////////////////////////////////////////////
-    
- 
+	
+	Flock2d * flockPtr;
+	
+	// public Team team;
+	// public int om;
+	// public float forceSeparate, forceAlign, forceCohesion;
+	// public float maxTurn, maxSpeed, maxForce;
+	
 	Boid2d() {
 		x = y = vx = vy = ax = ay = 0.0f;
-		life = 1;
+		life = 0;
 		flockPtr = NULL;
 		attr = 0.0f;
         
@@ -83,15 +85,14 @@ Flock2d * flockPtr;
         attractionAlex = 100.5f;
         attractiondeviationAlex =0.0f;
         group=0;
-        
+        // fin new variable alex
 	}
-    
-    
 	
 	Boid2d(Flock2d * flock);
 	
 	Boid2d * setFlock(Flock2d * flock);
 	
+<<<<<<< HEAD
 
 ////// set Valeurs
     Boid2d * setValTotal(float _x, float _y,
@@ -103,15 +104,15 @@ Flock2d * flockPtr;
 
         this->setLoc(_x, _y);
         this->setGroup(_group);
-        this->setLead(false);
+        //this->setLead(_lead);
         this->setValSepa(_sepa, _distSepa);
         this->setValCohe(_cohe, _distCohe);
         this->setValAlig(_alig, _distAlig);
         maxSpeedAlex = _maxSpeed;
         maxForceAlex = _maxForce;
         this->setValAttraction(_attraction, _attractiondeviation);
-        this->setValAlignNoGroup(20, 20);
-        this->setValSepaNoGroup(20,20);
+        //this->setValAlignNoGroup(<#float _alignNoGroup#>, <#float _distAlignNoGroup#>);
+        //this->setValSepaNoGroup(<#float _sepaNoGroup#>, );
         return this;
     }
     
@@ -180,17 +181,58 @@ Flock2d * flockPtr;
     Boid2d * setValAlignNoGroup(float _alignNoGroup, float _distAlignNoGroup){
         alignNoGroup=_alignNoGroup;
         distAlignNoGroup=_distAlignNoGroup;
+=======
+	Boid2d * setLoc(float lx, float ly) {
+		x = lx;
+		y = ly;
+		return this;
+	}
+////// set Valeurs alex
+    Boid2d * setVal(float lx, float ly,
+                    float lsepa,float lalig, float lcohe,
+                    float ldistSepa,float ldistAlig, float ldistCohe,
+                    float lmaxSpeed, float lmaxForce,
+                    float lattraction, float lattractiondeviation,
+                    int lgroup) {
+        x = lx;
+        y = ly;
+        separateGroup = lsepa;
+        alignGroup = lalig;
+        cohesionGroup = lcohe;
+        distSeparationGroup = ldistSepa;
+        distAlignGroup = ldistAlig;
+        distCohesionGroup= ldistCohe;
+        maxSpeedAlex = lmaxSpeed;
+        maxForceAlex = lmaxForce;
+        attractionAlex = lattraction;
+        attractiondeviationAlex = lattractiondeviation;
+        group = lgroup;
+>>>>>>> parent of 42b1788... motif fonction et début de code
         return this;
     }
-    
-    
 ////// fin set Valeurs alex
 
 
+<<<<<<< HEAD
 
     void bounds();
+<<<<<<< HEAD
+<<<<<<< HEAD
     
     void boudsColision();
+=======
+	Boid2d * setVel(float velx, float vely) {
+		vx = velx;
+		vy = vely;
+		return this;
+	}
+	
+	void bounds();
+>>>>>>> parent of 42b1788... motif fonction et début de code
+=======
+>>>>>>> parent of d2d0dfd... motif pour lulu :)
+=======
+>>>>>>> parent of d2d0dfd... motif pour lulu :)
 	
 	/*
 	 * main funcs
@@ -206,7 +248,13 @@ Flock2d * flockPtr;
 	float* cohesion( float *vec);	
 	float* align( float *vec) ;		
 	float* separate( float *vec) ;
-
+	
+	
+	
+	
+	/*
+	 * integration of all forces in single eq now with attraction points builtin
+	 */
 	
     float* flockfull(const float amount, float *vec);
 		
