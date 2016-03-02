@@ -30,35 +30,35 @@ Boid2d * Boid2d::setFlock(Flock2d * flock) {
 void Boid2d::bounds() {
 	switch (flockPtr->boundmode) {
 		case 0: // CLAMP
-			if (position.x < flockPtr->minX) {
-				position.x = flockPtr->minX;
-				velocite.x = -velocite.x;
+			if (x < flockPtr->minX) {
+				x = flockPtr->minX;
+				vx = -vx;
 			}
-			if (position.x > flockPtr->maxX) {
-				position.x = flockPtr->maxX;
-				velocite.x = -velocite.x;
+			if (x > flockPtr->maxX) {
+				x = flockPtr->maxX;
+				vx = -vx;
 			}
-			if (position.y < flockPtr->minY) {
-				position.y = flockPtr->minY;
-				velocite.y = -velocite.y;
+			if (y < flockPtr->minY) {
+				y = flockPtr->minY;
+				vy = -vy;
 			}
-			if (position.y > flockPtr->maxY) {
-				position.y = flockPtr->maxY;
-				velocite.y = -velocite.y;
+			if (y > flockPtr->maxY) {
+				y = flockPtr->maxY;
+				vy = -vy;
 			}
 			break;
 		case 1: // WRAP
-			if (position.x < flockPtr->minX) {
-				position.x+= flockPtr->boundsWidth;
+			if (x < flockPtr->minX) {
+				x += flockPtr->boundsWidth;
 			}
-			if (position.x > flockPtr->maxX) {
-				position.x -= flockPtr->boundsWidth;
+			if (x > flockPtr->maxX) {
+				x -= flockPtr->boundsWidth;
 			}
-			if (position.y < flockPtr->minY) {
-				position.y += flockPtr->boundsHeight;
+			if (y < flockPtr->minY) {
+				y += flockPtr->boundsHeight;
 			}
-			if (position.y > flockPtr->maxY) {
-				position.y -= flockPtr->boundsHeight;
+			if (y > flockPtr->maxY) {
+				y -= flockPtr->boundsHeight;
 			}
 			break;
 	}
@@ -72,8 +72,8 @@ void Boid2d::boudsColision(){
         //// ATENTION CODE FAUT !!!
         //// faire code de colission en !! 0==0
         
-        this->position.x=-this->position.x;
-        this->velocite.y=-this->velocite.y;
+        this->vx=-this->vx;
+        this->vy=-this->vy;
     
     }
 
@@ -86,8 +86,8 @@ float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
 
 	
 	
-	dir[0] = target[0] - position.x;
-	dir[1] = target[1] - position.y;
+	dir[0] = target[0] - x;
+	dir[1] = target[1] - y;
 	float d = ABS(dir[0]) + ABS(dir[1]);
 	
 	if (d > 2) {
@@ -95,8 +95,8 @@ float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
 		dir[0] *= invDist;
 		dir[1] *= invDist;
 		// steer, desired - vel
-		target[0] = dir[0] - velocite.x;
-		target[1] = dir[1] - velocite.y;
+		target[0] = dir[0] - vx;
+		target[1] = dir[1] - vy;
 		float steerLen = ABS(target[0]) + ABS(target[1]);
 		if (steerLen > 0) {
 			float invSteerLen = amount / steerLen;// 1f / steerLen;
@@ -104,15 +104,10 @@ float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
 			target[1] *= invSteerLen;
 		}
 	}
-	
-
-	
+		
 	return target;
 	
 }
-
-
-
 
 //////////////////// code Alex update /////////////////
 
@@ -122,8 +117,8 @@ void Boid2d:: update(const float amount) {
     //float * vec = flockfull(amount);
     
     // reset acc on begin 2 draw
-    acceleration.x = 0;
-    acceleration.y = 0;
+    ax = 0;
+    ay = 0;
     
     
     float *vec = new float[2];
@@ -133,8 +128,8 @@ void Boid2d:: update(const float amount) {
     //	flock(amount, vec);
     flockfull(amount, vec);
     
-    acceleration.x += vec[0];// *amount;
-    acceleration.y += vec[1];// *amount;
+    ax += vec[0];// *amount;
+    ay += vec[1];// *amount;
     
     delete [] vec;
     
@@ -143,28 +138,31 @@ void Boid2d:: update(const float amount) {
     // accY = vec[1];
     
     // limit force
-    float distMaxForce = ABS(acceleration.x) + ABS(acceleration.y);
+    float distMaxForce = ABS(ax) + ABS(ay);
     if (distMaxForce > maxForceAlex) {
         distMaxForce = maxForceAlex / distMaxForce;
-        acceleration *= distMaxForce;
+        ax *= distMaxForce;
+        ay *= distMaxForce;
     }
     
     //vx += ax + (rand()%200 -100)/100 * 1.5;
     //vy += ay + (rand()%200 -100)/100 * 1.5;
 
-
-    velocite += acceleration;
+    vx += ax;
+    vy += ay;
+    
     // limit speed
     
     
-    float distMaxSpeed = ABS(velocite.x) + ABS(velocite.y);
+    float distMaxSpeed = ABS(vx) + ABS(vy);
     if (distMaxSpeed > maxSpeedAlex) {
         distMaxSpeed = maxSpeedAlex / distMaxSpeed;
-        velocite *= distMaxSpeed;
-
+        vx *= distMaxSpeed;
+        vy *= distMaxSpeed;
     }
     
-    position += velocite *amount;
+    x += vx * amount;
+    y += vy * amount;
     
     //x += ((rand()%200)-100)/100 * 5;
     //y += ((rand()%200)-100)/100 * 5;
@@ -218,8 +216,8 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             float aligndist = other->distAlignGroup;
             float cohesiondist = other->distCohesionGroup;
             
-            float dx = other->position.x - position.x;
-            float dy = other->position.y - position.y;
+            float dx = other->x - x;
+            float dy = other->y - y;
             float d = ABS(dx) + ABS(dy);
             if (d <= 1e-7)
                 continue;
@@ -239,21 +237,21 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                 countcoh++;
                 if (other->lead) {
                      /// a modif
-                    coh[0] += other->position.x * other->cohesionGroup * d/20;
-                    coh[1] += other->position.y * other->cohesionGroup * d/20;
+                    coh[0] += other->x * other->cohesionGroup * d/20;
+                    coh[1] += other->y * other->cohesionGroup * d/20;
                     cout << " I am a leader !!! "<< endl;
                 }
                 else{
-                coh[0] += other->position.x * other->cohesionGroup;
-                coh[1] += other->position.y * other->cohesionGroup;
+                coh[0] += other->x * other->cohesionGroup;
+                coh[1] += other->y * other->cohesionGroup;
                 }
             }
             
             // ali
             if (d < aligndist) {
                 countali++;
-                ali[0] += other->velocite.x * other->alignGroup;
-                ali[1] += other->velocite.y * other->alignGroup;
+                ali[0] += other->vx * other->alignGroup;
+                ali[1] += other->vy * other->alignGroup;
             }
         }
         
@@ -267,8 +265,8 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             }
             if (d < distAlignNoGroup) {
                 countali++;
-                ali[0] -= other->velocite.x * alignNoGroup;
-                ali[1] -= other->velocite.y * alignNoGroup;
+                ali[0] -= other->vx * alignNoGroup;
+                ali[1] -= other->vy * alignNoGroup;
                 
             }
             
@@ -305,8 +303,8 @@ float* Boid2d::flockfull(const float amount, float *vec) {
         for (int i = 0; i < flockPtr->attractionPoints.size(); i++) {
             AttractionPoint2d * point = flockPtr->attractionPoints.at(i);
             
-            float dx = point->x - position.x;
-            float dy = point->y - position.y;
+            float dx = point->x - x;
+            float dy = point->y - y;
             float d = ABS(dx) + ABS(dy);
             if (d <= 1e-7)
                 continue;
@@ -330,14 +328,14 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             AttractionLine2d * line =flockPtr->attractionLines.at(i);
             
             float AP[2];
-            AP[0] = position.x - line->a[0];
-            AP[1] = position.y - line->a[1];
+            AP[0] = x - line->a[0];
+            AP[1] = y - line->a[1];
             float ti = ( line->u[0] * AP[0] + line->u[1] * AP[1])/( line->u[0] * line->u[0] + line->u[1] * line->u[1]);
             AP[0] = line->a[0] + ti * line->u[0];
             AP[1] = line->a[1] + ti * line->u[1];
             
-            float dx = AP[0] - position.x;
-            float dy = AP[1] - position.y;
+            float dx = AP[0] - x;
+            float dy = AP[1] - y;
             float d = ABS(dx) + ABS(dy);
             
             

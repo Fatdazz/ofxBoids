@@ -96,12 +96,12 @@ public:
 	}
 
 	Flock2d * setup(int num, float lx, float ly, float dev) {
-		//init(num, lx, ly, dev);
+		init(num, lx, ly, dev);
 		return this;
 	}
 /////////////////////////////////////////////// initAlex
     void initA(int num,
-               ofVec2f _position, float dev,
+               float _x, float _y, float dev,
                float _sepa,float _alig, float _cohe,
                float _distSepa, float _distAlig, float _distCohe,
                float _maxSpeed, float _maxForce,
@@ -109,11 +109,10 @@ public:
                int _group) {
         
         for (int i = 0; i < num; i++) {
-            _position.x += ofRandom(-dev, dev);
-            _position.y += ofRandom(-dev, dev);
             Boid2d * b = new Boid2d(this);
             // need to be scattered or else no work
-            b->setValTotal(_position,
+            b->setValTotal(_x+ ofRandom(-dev, dev),
+                          _y+ ofRandom(-dev, dev),
                           _sepa,
                           _alig,
                           _cohe,
@@ -143,7 +142,7 @@ public:
 //////////////////////////////////////////
     
     
-/*
+    
 	void init(int num, float lx, float ly, float dev) {
 
 		for (int i = 0; i < num; i++) {
@@ -159,7 +158,7 @@ public:
 		defaultValues();
 
 	}
-*/
+
 	void defaultValues() {
 		boundmode = 1;
 		separate = 20.0f;
@@ -184,7 +183,7 @@ public:
 		Boid2d * b = new Boid2d();//(this); // first constructor is zeroing nicely
 		b->setFlock(this);
 		
-		//b->setLoc(lx, ly);
+		b->setLoc(lx, ly);
 		
 		b->attr = attraction + ofRandom(-attractiondeviation, attractiondeviation);
 		
