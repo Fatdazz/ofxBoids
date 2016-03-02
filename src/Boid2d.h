@@ -38,6 +38,7 @@
 #include <ctime>
 #include <ofMain.h>
 //#include "opencv2/opencv.hpp"
+#include "GroupBoids2d.h"
 
 
 class Flock2d;
@@ -62,7 +63,10 @@ public:
     
     float attr;
     
+
 Flock2d * flockPtr;
+//GroupBoid2d * groupPtr;
+    
 ///////////////////////////////////////////////////////////////////
     
  
@@ -71,6 +75,7 @@ Flock2d * flockPtr;
         position = velocite = acceleration = ofVec2f(0, 0);
 		life = 1;
 		flockPtr = NULL;
+        //groupPtr = NULL;
 		attr = 0.0f;
         
         // new vabiable alex
@@ -92,8 +97,10 @@ Flock2d * flockPtr;
     
 	
 	Boid2d(Flock2d * flock);
+//    Boid2d(GroupBoid2d * groupBoid);
 	
 	Boid2d * setFlock(Flock2d * flock);
+//    Boid2d * setGoupBoid(GroupBoid2d * groupBoid);
 	
 
 ////// set Valeurs

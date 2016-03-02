@@ -35,6 +35,7 @@
 #include "ofMain.h"
 #include "Boid2d.h"
 #include "AttractionPoint2d.h"
+#include "GroupBoids2d.h"
 
 class Flock2d {
 public:
@@ -129,6 +130,16 @@ public:
         }
         
     }
+    
+    void initGoupBoids(int num,
+                       ofVec2f _position, float dev,
+                       float _sepa,float _alig, float _cohe,
+                       float _distSepa, float _distAlig, float _distCohe,
+                       float _maxSpeed, float _maxForce,
+                       float _attraction, float _attractiondeviation,
+                       int _group) {
+        
+}
 //////////////////////////////////////////
     
     

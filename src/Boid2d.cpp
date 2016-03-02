@@ -82,11 +82,8 @@ void Boid2d::boudsColision(){
 
 float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
 	
-//	float steer[] = {0.f, 0.f}; //new float[2];
-//	float *dir =new float[2];
 	float dir[2] = {0.f,0.f};
-//	dir[0] = 0.0f;
-//	dir[1] = 0.0f;
+
 	
 	
 	dir[0] = target[0] - position.x;
@@ -108,172 +105,12 @@ float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
 		}
 	}
 	
-//	delete [] dir;
+
 	
 	return target;
 	
 }
 
-
-
-
-/*
-
-//float* Boid2d::cohesion(vector<Boid2d*>* b, float *vec) {
-float* Boid2d::cohesion( float *vec) {
-	
-	float cohesiondist = flockPtr->distCohesion;
-//	float vec[] = {0.f, 0.f};//new float[2];
-	int count = 0;
-	
-	for (int i = 0; i < flockPtr->boids.size(); i++) {
-		Boid2d * other = flockPtr->boids.at(i);
-		float dx = other->position.x - position.x;
-		float dy = other->position.y - position.y;
-		float d = ABS(dx) + ABS(dy);
-		if (d > 0 && d < cohesiondist) {
-			count++;
-			vec[0] += other->position.x;// dx;
-			vec[1] += other->position.y;// dy;
-		}
-	}
-	
-	if (count > 0) {
-		float invCount = 1.f / count;
-		vec[0] *= invCount;
-		vec[1] *= invCount;
-		steer(vec, 1);
-	}
-	
-	return vec;
-}
-
-
-
-
-
-
-
-
-float* Boid2d::align( float *vec) {
-	
-	float aligndist = flockPtr->distAlign;
-//	float vec[] = {0.f, 0.f};//new float[2];
-	int count = 0;
-	
-	for (int i = 0; i < flockPtr->boids.size(); i++) {
-		Boid2d * other = flockPtr->boids.at(i);
-		float dx = other->x - x;
-		float dy = other->y - y;
-		float d = ABS(dx) + ABS(dy);
-		if (d > 0 && d < aligndist) {
-			count++;
-			vec[0] += other->vx;// dx;
-			vec[1] += other->vy;// dy;
-		}
-	}
-	
-	if (count > 0) {
-		float invCount = 1.f / count;
-		vec[0] *= invCount;
-		vec[1] *= invCount;
-	}
-	
-	return vec;
-	
-}
-
-
-
-
-
-float* Boid2d::separate(float *vec) {
-	
-	float separatedist = flockPtr->distSeparation;
-//	float vec[] = {0.f, 0.f}; //new float[2];
-	int count = 0;
-	
-	for (int i = 0; i < flockPtr->boids.size(); i++) {
-		Boid2d * other = flockPtr->boids.at(i);
-		float dx = other->x - x;
-		float dy = other->y - y;
-		float d = ABS(dx) + ABS(dy);
-		if (d > 0 && d < flockPtr->distAlign) {
-			count++;
-			// / mais longe influenciam mais?
-			// vec[0] += -dx;
-			// vec[1] += -dy;
-			float invD = 1.f / d;
-			vec[0] += -dx * invD;
-			vec[1] += -dy * invD;
-		}
-	}
-	
-	if (count > 0) {
-		float invCount = 1.f / count;
-		vec[0] *= invCount;
-		vec[1] *= invCount;
-	}
-	
-	return vec;
-}
-
-
-
-
-
-
-
-float* Boid2d::flock(const float amount, float *vec) {
-	//	float * vec = new float[2];
-	
-	float *sep = new float[2];
-	float *ali = new float[2];
-	float *coh = new float[2];
-	
-	sep[0] = 0.0f;
-	sep[1] = 0.0f;
-	ali[0] = 0.0f;
-	ali[1] = 0.0f;
-	coh[0] = 0.0f;
-	coh[1] = 0.0f;
-	
-	separate(sep);
-	align( ali);
-	cohesion( coh);
-	
-	// System.out.print("boid flock sep " + sep[0] + " " + sep[1] + " "
-	// + flock.forceSeparate + "\n");
-	
-	sep[0] *= flockPtr->separate;
-	sep[1] *= flockPtr->separate;
-	
-	ali[0] *= flockPtr->align;
-	ali[1] *= flockPtr->align;
-	
-	coh[0] *= flockPtr->cohesion;
-	coh[1] *= flockPtr->cohesion;
-	
-	vec[0] = sep[0] + ali[0] + coh[0];
-	vec[1] = sep[1] + ali[1] + coh[1];
-	float d =ABS(vec[0]) + ABS(vec[1]);
-	float invDist = 1.f;
-	if (d > 0)
-		invDist = amount / d;// 1f / d;
-	vec[0] *= invDist;
-	vec[1] *= invDist;
-	
-	
-	delete[] sep;
-	delete[] ali;
-	delete[] coh;
-	
-	
-	return vec;
-}
-
-
-*/
 
 
 
@@ -459,16 +296,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
         coh = steer(coh, 1);
     }
     
-    // if using extra forces, place here
-    
-    // sep[0] *= flock.separate;
-    // sep[1] *= flock.separate;
-    //
-    // ali[0] *= flock.align;
-    // ali[1] *= flock.align;
-    //
-    // coh[0] *= flock.cohesion;
-    // coh[1] *= flock.cohesion;
+
     
     
     
