@@ -36,6 +36,7 @@
 #include <cstddef>
 #include <cstdlib>
 #include <ctime>
+#include <ofMain.h>
 //#include "opencv2/opencv.hpp"
 
 
@@ -44,11 +45,12 @@ class Flock2d;
 class Boid2d {
 public:
 ///////////////////////////////////////////////////////////////////
-	float x, y, vx, vy, ax, ay;
+	//float x, y, vx, vy, ax, ay;
 	int life;
     bool lead;
     int group;
     
+    ofVec2f position, velocite, acceleration;
     float separateGroup, alignGroup, cohesionGroup;
     float distSeparationGroup, distAlignGroup, distCohesionGroup;
     float maxTurnAlex, maxSpeedAlex, maxForceAlex;
@@ -65,7 +67,8 @@ Flock2d * flockPtr;
     
  
 	Boid2d() {
-		x = y = vx = vy = ax = ay = 0.0f;
+		//x = y = vx = vy = ax = ay = 0.0f;
+        position = velocite = acceleration = ofVec2f(0, 0);
 		life = 1;
 		flockPtr = NULL;
 		attr = 0.0f;
@@ -94,14 +97,14 @@ Flock2d * flockPtr;
 	
 
 ////// set Valeurs
-    Boid2d * setValTotal(float _x, float _y,
+    Boid2d * setValTotal(ofVec2f _position,
                     float _sepa,float _alig, float _cohe,
                     float _distSepa,float _distAlig, float _distCohe,
                     float _maxSpeed, float _maxForce,
                     float _attraction, float _attractiondeviation,
                     int _group) {
 
-        this->setLoc(_x, _y);
+        this->setLoc(_position);
         this->setGroup(_group);
         this->setLead(false);
         this->setValSepa(_sepa, _distSepa);
@@ -125,15 +128,13 @@ Flock2d * flockPtr;
         return this;
     }
     
-    Boid2d * setLoc(float _x, float _y) {
-        x = _x;
-        y = _y;
+    Boid2d * setLoc(ofVec2f _position) {
+        position = _position;
         return this;
     }
     
-    Boid2d * setVel(float _vx, float _vy) {
-        vx = _vx;
-        vy = _vy;
+    Boid2d * setVel(ofVec2f _velocite) {
+        velocite=_velocite;
         return this;
     }
     
