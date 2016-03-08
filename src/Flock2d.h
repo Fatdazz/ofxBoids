@@ -40,17 +40,11 @@
 class Flock2d {
 public:
 	
-	vector <Boid2d *>				boids;
+	//vector <Boid2d *>				boids;
 	vector <AttractionPoint2d *>	attractionPoints;
-    vector< AttractionLine2d *>      attractionLines;
-    vector <GroupBoid2d>         GroupBoid;
+    vector< AttractionLine2d *>     attractionLines;
+    vector <GroupBoid2d *>          groupBoid;
 
-	// public ArrayList<Team> teams; // superclass flockTeam, etc
-
-	// forces
-	float separate, align, cohesion;
-	float distSeparation, distAlign, distCohesion;
-	float maxTurn, maxSpeed, maxForce;
 
 	// bounds
 	float minX, minY, maxX, maxY, boundsWidth, boundsHeight;
@@ -61,28 +55,28 @@ public:
 	float attraction, attractiondeviation;
 
 	Flock2d(){
-		clear();
-		separate = align = cohesion = distSeparation = distAlign = distCohesion = maxTurn =
-		maxSpeed = maxForce = minX = maxX = maxY = boundsWidth = boundsHeight = 0;
+		//clear();
+        minX = maxX = maxY = boundsWidth = boundsHeight = 0;
 		boundmode = 0;
 		dt = 1.0f;
 		attraction = attractiondeviation = 0.0f;
 	}
+
+    void clear(){
+        clearGroups();
+        clearAttrPts();
+    
+    
+    }
+    
+    void clearGroups(){
+        while (groupBoid.size()>0) {
+            delete groupBoid[0];
+            groupBoid.erase(groupBoid.begin());
+        }
+    }
 	
-	
-	void clear(){
-		clearBoids();
-		clearAttrPts();
-	}
-	
-	void clearBoids(){
-		while(boids.size()>0){
-			delete boids[0];
-			boids.erase(boids.begin());
-		}
-		
-	}
-	
+	/// modif a faire pour ligne
 	void clearAttrPts(){
 		while(attractionPoints.size()>0){
 			delete attractionPoints[0];
@@ -90,7 +84,121 @@ public:
 		}
 		
 	}
-	
+    void addGoup(){
+        GroupBoid2d * g = new GroupBoid2d();
+        groupBoid.push_back(g);
+    }
+    
+    void addBoid(int _numGroup){
+        GroupBoid2d * g = groupBoid.at(_numGroup);
+        Boid2d * b = new Boid2d();
+        g->boids.push_back(b);
+    }
+    
+    void changeValeurBoidsGroup(int _numGroup ){
+        GroupBoid2d * g = groupBoid.at(_numGroup);
+        for (int i=0; i<g->boids.size(); i++) {
+            
+        }
+    }
+    void addBoidGroup(int _numGroup, ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
+        GroupBoid2d * g = groupBoid.at(_numGroup);
+        Boid2d * b = new Boid2d(this);
+        b->setLoc(_position);
+        b->setValSepa(_sepa, _distSepa);
+        b->setValCohe(_cohe, _distCohe);
+        b->setValAlig(_alig, _distAlig);
+        b->setMaxForce(_maxForce);
+        b->setMaxSpeed(_maxSpeed);
+        b->setGroup(_numGroup);
+        g->boids.push_back(b);
+    }
+    
+    void initGoup(int num, ofVec2f _position, float dev, float _sepa, float _alig, float _cohe, float _distSepa, float _distAlig, float _distCohe, float _maxSpeed, float _maxForce, float _attraction, float _attractiondeviation, int _group){
+        
+        GroupBoid2d * b = new GroupBoid2d(); // this
+        b->init(num, _position, dev, _sepa, _alig, _cohe, _distSepa, _distAlig, _distCohe, _maxSpeed,_maxForce, _attraction, _attractiondeviation, _group);
+        
+        
+        groupBoid.push_back(b);
+        updateRegle();
+    
+    }
+    
+    int getNumGroups(){
+        return groupBoid.size();
+    }
+    
+    int getNumBoids(){
+        int groupsSize = groupBoid.size();
+        int boids = 0;
+        for (int i=0; i<groupsSize; i++) {
+            boids += groupBoid[i]->getNumBoids();
+        }
+    }
+    
+    void update() {
+        int groupsSize = groupBoid.size();
+        for (int i = 0; i < groupsSize; i++) {
+            groupBoid[i]->update(dt);
+        }
+    }
+    
+///////////////////////////////// Bounds //////////////////////////////////
+    Flock2d * setBounds(float minx, float miny, float maxx, float maxy) {
+        minX = minx;
+        minY = miny;
+        maxX = maxx;
+        maxY = maxy;
+        boundsWidth = maxX - minX;
+        boundsHeight = maxY - minY;
+        
+        return this;
+    }
+    
+    int getBoundmode() {
+        return boundmode;
+    }
+    
+    
+    Flock2d * setBoundmode(int boundmode) {
+        this->boundmode = boundmode;
+        return this;
+    }
+    
+    
+    
+    bool hasAttractionPoints() {
+        return attractionPoints.size() > 0;
+    }
+    
+    bool hasAttractionLines() {
+        return attractionLines.size() > 0;
+    }
+    
+    
+
+    
+    
+private:
+    
+    void updateRegle(){
+        for (int i=0; i<groupBoid.size(); i++) {
+            GroupBoid2d *g = groupBoid[i];
+            if(g->getNumRegle()==groupBoid.size()){
+                continue;
+            }
+            while (g->getNumRegle()<groupBoid.size()) {
+                g->initVectorRegleDefault(g->getNumRegle()); // +1 ?
+            }
+        }
+    
+    }
+
+
+    
+    
+/*
 	
 	Flock2d * setup(int num, float lx, float ly) {
 		return setup(num, lx, ly, 1);
@@ -133,8 +241,7 @@ public:
     }
 //////////////////////////////////////////
     
-    
-/*
+///////// ici ///////
 	void init(int num, float lx, float ly, float dev) {
 
 		for (int i = 0; i < num; i++) {
@@ -150,7 +257,7 @@ public:
 		defaultValues();
 
 	}
-*/
+/////// ici ////
 	void defaultValues() {
 		boundmode = 1;
 		separate = 20.0f;
@@ -262,55 +369,39 @@ public:
 		return cohesion;
 	}
 
-	/**
-	 * @return the distSeparation
-	 */
+	
 	float getSeparation() {
 		return distSeparation;
 	}
 
-	/**
-	 * @return the distNeighborDistance
-	 */
+	
 	float getDistAlign() {
 		return distAlign;
 	}
 
-	/**
-	 * @return the distNeighborDistance
-	 */
+	
 	float getDistCohesion() {
 		return distCohesion;
 	}
 
-	/**
-	 * @param distSeparation
-	 *            the distSeparation to set
-	 */
+	
 	Flock2d * setDistSeparation(float distSeparation) {
 		this->distSeparation = distSeparation;
 		return this;
 	}
 
-	/**
-	 * @return the distNeighborDistance
-	 */
 	Flock2d * setDistAlign(float d) {
 		distAlign = d;
 		return this;
 	}
 
-	/**
-	 * @return the distNeighborDistance
-	 */
+
 	Flock2d * setDistCohesion(float d) {
 		distCohesion = d;
 		return this;
 	}
 
-	/**
-	 *
-	 */
+
 	Flock2d * setBounds(float minx, float miny, float maxx, float maxy) {
 		minX = minx;
 		minY = miny;
@@ -322,25 +413,17 @@ public:
 		return this;
 	}
 
-	/**
-	 * @return the boundmode
-	 */
+
 	int getBoundmode() {
 		return boundmode;
 	}
 
-	/**
-	 * @param boundmode
-	 *            the boundmode to set
-	 */
+
 	Flock2d * setBoundmode(int boundmode) {
 		this->boundmode = boundmode;
 		return this;
 	}
 
-	/*
-	 * update func
-	 */
 	void update() {
 		int boidsSize = boids.size();
 		for (int i = 0; i < boidsSize; i++) {
@@ -387,13 +470,7 @@ public:
 		return &attractionPoints;
 	}
 
-	bool hasAttractionPoints() {
-		return attractionPoints.size() > 0;
-	}
-    
-    bool hasAttractionLines() {
-        return attractionLines.size() > 0;
-    }
+
 
 	void changeAttractionPoint(int id, float x, float y, float force,
 			float sensorDist) {
@@ -420,12 +497,7 @@ public:
 	
 	
 	
-	
-	/***
-	 
-	 new stuf to incorporate in p5
-	 
-	 */
+
 	
 	
 	void removeFirstBoid(){
@@ -448,8 +520,7 @@ public:
 			boids.erase(boids.begin()+idx);
 		}
 	}
-	
-	
-	
+*/
+
 	
 };

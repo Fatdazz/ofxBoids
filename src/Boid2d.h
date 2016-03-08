@@ -41,6 +41,7 @@
 
 
 class Flock2d;
+class GroupBoid2d;
 
 class Boid2d {
 public:
@@ -63,6 +64,7 @@ public:
     float attr;
     
     Flock2d * flockPtr;
+    GroupBoid2d * groupPtr;
 ///////////////////////////////////////////////////////////////////
     
  
@@ -71,6 +73,7 @@ public:
         position = velocite = acceleration = ofVec2f(0, 0);
 		life = 1;
 		flockPtr = NULL;
+        groupPtr = NULL;
 		attr = 0.0f;
         
         // new vabiable alex
@@ -210,5 +213,11 @@ public:
 
 	
     float* flockfull(const float amount, float *vec);
-		
+    
+private:
+    
+    float* foncSep(const float dx, const float dy, const float invD, Boid2d *other, float *sep);
+    float* foncCohe(const float d, const float variable,Boid2d *other, float *coh);
+    float* foncAlig(Boid2d *other, float *ali);
+    
 };
