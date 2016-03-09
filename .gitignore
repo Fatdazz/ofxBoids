@@ -1,6 +1,9 @@
+addons.make
+config.make
+Makefile ofBoids.qbs
 
-# Created by 
-https://www.gitignore.io/api/c++,windows,osx,linux,visualstudio,visualstudiocode,emacs,xcode
+
+# Created by https://www.gitignore.io/api/c++,windows,osx,linux,visualstudio,visualstudiocode,emacs,xcode
 
 ### C++ ###
 # Compiled Object files
@@ -50,7 +53,7 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-# Windows shortcuts
+a# Windows shortcuts
 *.lnk
 
 
