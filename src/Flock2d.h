@@ -37,6 +37,30 @@
 #include "AttractionPoint2d.h"
 #include "GroupBoids2d.h"
 
+class ValsBoid{
+public:
+    
+    float _separateGroup, _alignGroup, _cohesionGroup;
+    float _distSeparationGroup, _distAlignGroup, _distCohesionGroup;
+    float _maxSpeed, _maxForce;
+
+
+    ValsBoid(){
+        
+        _separateGroup=0;
+        _distSeparationGroup=0;
+        _alignGroup=0;
+        _distAlignGroup=0;
+        _cohesionGroup=0;
+        _distCohesionGroup=0;
+        _maxSpeed=0;
+        _maxForce=0;
+    }
+
+
+};
+
+
 class Flock2d {
 public:
 	
@@ -65,8 +89,6 @@ public:
     void clear(){
         clearGroups();
         clearAttrPts();
-    
-    
     }
     
     void clearGroups(){
@@ -87,23 +109,25 @@ public:
     void addGoup(){
         GroupBoid2d * g = new GroupBoid2d();
         groupBoid.push_back(g);
+        // ajout update regle
+    }
+    
+    void addBoidGroups(int _numGroups){
+        for (int i=0; i< _numGroups; i++) {
+            addGoup();
+        }
     }
     
     void addBoid(int _numGroup){
         GroupBoid2d * g = groupBoid.at(_numGroup);
-        Boid2d * b = new Boid2d();
+        Boid2d * b = new Boid2d(this,g);
         g->boids.push_back(b);
     }
     
-    void changeValeurBoidsGroup(int _numGroup ){
-        GroupBoid2d * g = groupBoid.at(_numGroup);
-        for (int i=0; i<g->boids.size(); i++) {
-            
-        }
-    }
     void addBoidGroup(int _numGroup, ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
         GroupBoid2d * g = groupBoid.at(_numGroup);
-        Boid2d * b = new Boid2d(this);
+        g->id=_numGroup;
+        Boid2d * b = new Boid2d(this,g);
         b->setLoc(_position);
         b->setValSepa(_sepa, _distSepa);
         b->setValCohe(_cohe, _distCohe);
@@ -113,17 +137,30 @@ public:
         b->setGroup(_numGroup);
         g->boids.push_back(b);
     }
-    
-    void initGoup(int num, ofVec2f _position, float dev, float _sepa, float _alig, float _cohe, float _distSepa, float _distAlig, float _distCohe, float _maxSpeed, float _maxForce, float _attraction, float _attractiondeviation, int _group){
+
+    void addBoidsGroup(int _numBoids,int _numGroup, ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
         
-        GroupBoid2d * b = new GroupBoid2d(); // this
-        b->init(num, _position, dev, _sepa, _alig, _cohe, _distSepa, _distAlig, _distCohe, _maxSpeed,_maxForce, _attraction, _attractiondeviation, _group);
-        
-        
-        groupBoid.push_back(b);
-        updateRegle();
-    
+        for (int i=0; i<_numBoids; i++) {
+            addBoidGroup(_numGroup, _position, _sepa, _distSepa, _cohe, _distCohe, _alig, _distAlig, _maxForce, _maxSpeed);
+        }
     }
+    
+    void setValeursBoidsGroup(int _numGroup,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed ){
+        GroupBoid2d * g = groupBoid.at(_numGroup);
+        g->setValsGlobalBoids( _alig, _distAlig, _sepa, _distSepa, _cohe, _distCohe);
+        g->setMaxSpeedBoids(_maxSpeed);
+        g->setMaxForceBoids(_maxForce);
+        
+    }
+    
+    void setValeursBoidGroup (int _numGroup,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed, int _at){
+        GroupBoid2d * g = groupBoid.at(_numGroup);
+        g->setValsGlobalBoid( _alig, _distAlig, _sepa, _distSepa, _cohe, _distCohe, _at);
+        g->setMaxSpeedBoid(_maxSpeed,_at);
+        g->setMaxForceBoid(_maxForce,_at);
+        
+    }
+    
     
     int getNumGroups(){
         return groupBoid.size();
@@ -142,6 +179,9 @@ public:
         for (int i = 0; i < groupsSize; i++) {
             groupBoid[i]->update(dt);
         }
+    }
+    void updateGroup(int _numGroup){
+        groupBoid[_numGroup]->update(dt);
     }
     
 ///////////////////////////////// Bounds //////////////////////////////////
@@ -166,7 +206,7 @@ public:
         return this;
     }
     
-    
+///////////////////////////////// Attractions ///////////////////
     
     bool hasAttractionPoints() {
         return attractionPoints.size() > 0;
@@ -178,23 +218,23 @@ public:
     
     
 
-    
-    
 private:
     
     void updateRegle(){
-        for (int i=0; i<groupBoid.size(); i++) {
-            GroupBoid2d *g = groupBoid[i];
-            if(g->getNumRegle()==groupBoid.size()){
-                continue;
-            }
-            while (g->getNumRegle()<groupBoid.size()) {
-                g->initVectorRegleDefault(g->getNumRegle()); // +1 ?
+        if(groupBoid.size()!= 0){
+            for (int i=0; i<groupBoid.size()-1; i++) {
+                GroupBoid2d *g = groupBoid[i];
+                if(g->getNumRegle()== groupBoid.size()){
+                    continue;
+                }
+                while (g->getNumRegle() < groupBoid.size()) {
+                    g->addRegle();
+                    g->addRegleGroup(getNumGroups(), getNumGroups());
+
+                }
             }
         }
-    
     }
-
 
     
     

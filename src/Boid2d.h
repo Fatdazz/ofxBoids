@@ -94,7 +94,7 @@ public:
     
     
 	
-	Boid2d(Flock2d * flock);
+    Boid2d(Flock2d * flock, GroupBoid2d * _group);
 	
 	Boid2d * setFlock(Flock2d * flock);
 	
@@ -187,10 +187,7 @@ public:
         return this;
     }
     
-    
 ////// fin set Valeurs alex
-
-
 
     void bounds();
     

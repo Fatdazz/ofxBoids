@@ -7,12 +7,12 @@
  */
 #include "Boid2d.h"
 #include "Flock2d.h"
+//#include "ofMain.h"
 
-
-Boid2d::Boid2d(Flock2d * flock) {
+Boid2d::Boid2d(Flock2d * _flock, GroupBoid2d * _group) {
 		Boid2d();
-	this->flockPtr = flock;
-	
+	this->flockPtr = _flock;
+    this->groupPtr = _group;
 }
 
 
@@ -20,8 +20,6 @@ Boid2d * Boid2d::setFlock(Flock2d * flock) {
 	this->flockPtr = flock;
 	return this;
 }
-
-
 
 
 void Boid2d::bounds() {
@@ -228,7 +226,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
             
             invD = 1.f / d;
             
-            if (other->group==this->group) {
+            if (other->group==this->groupPtr->id) {
                 // sep
                 if (d < separatedist) {
                     countsep++;
@@ -388,15 +386,14 @@ float* Boid2d::flockfull(const float amount, float *vec) {
     delete[] attrForce;
     
     
-    
     return vec;
 }
 
         
         
 float * Boid2d::foncSep(const float dx, const float dy, const float invD, Boid2d *other, float *sep){
-    sep[0] -= dx * invD * other->separateGroup;
-    sep[1] -= dy * invD * other->separateGroup;
+    sep[0] -= dx * invD * other->separateGroup * ofRandom(-5, 15);
+    sep[1] -= dy * invD * other->separateGroup * ofRandom(-5, 15);
     return sep;
 }
 

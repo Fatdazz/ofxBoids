@@ -20,73 +20,72 @@
 class Regle{
 public:
     int group;
-    float dist, force;
+    bool act;
+    float separateNoGroup, alignNoGroup, cohesionNoGroup;
+    float distSeparationNoGroup, distAlignNoGroup, distCohesionNoGroup;
+    
     
     Regle() {
         group = 0;
-        dist=force=0;
+        separateNoGroup = 0;
+        alignNoGroup = 0;
+        cohesionNoGroup =0;
+        distSeparationNoGroup = 0;
+        distAlignNoGroup = 0;
+        distCohesionNoGroup =0;
+        act=false;
     }
     
-void    initRegle(int _group, float _dist, float _force){
+    void initRegle(int _group, float _separateNoGroup, float _distSeparationNoGroup, float _cohesionNoGroup, float _distCohesionNoGroup, float _alignNoGroup, float _distAlignNoGroup){
         group = _group;
-        dist = _dist;
-        force = _force;
+        separateNoGroup = _separateNoGroup;
+        alignNoGroup = _alignNoGroup;
+        cohesionNoGroup =_cohesionNoGroup;
+        distSeparationNoGroup = _distSeparationNoGroup;
+        distAlignNoGroup = _distCohesionNoGroup;
+        distCohesionNoGroup =_distAlignNoGroup;
+        act=true;
     }
+    
+    void actRegle(){
+        act=!act;
+    }
+    
 };
+
+
+
 
 class GroupBoid2d {
 public:
     
     vector<Boid2d *>    boids;
+    int                 id;
     
-    
-    
-    void init(int num,
-              ofVec2f _position, float dev,
-              float _sepa,float _alig, float _cohe,
-              float _distSepa, float _distAlig, float _distCohe,
-              float _maxSpeed, float _maxForce,
-              float _attraction, float _attractiondeviation,
-              int _group) {
-        
-        for (int i = 0; i < num; i++) {
-            _position.x += ofRandom(-dev, dev);
-            _position.y += ofRandom(-dev, dev);
-            Boid2d * b = new Boid2d () ;
-            //Boid2d * b = new Boid2d(this);
-            // need to be scattered or else no work
-            b->setValTotal(_position,
-                           _sepa,
-                           _alig,
-                           _cohe,
-                           _distSepa,
-                           _distAlig,
-                           _distCohe,
-                           _maxSpeed,
-                           _maxForce,
-                           _attraction,
-                           _attractiondeviation,
-                           _group);
-            
-            boids.push_back(b);
-        }
-    }
-    
+    /*
     void initVectorRegleDefault(int _group){
         Regle r ;
-        r.initRegle(_group, 0.f, 0.f);
+        //r.initRegle(_group, 0.f, 0.f);
     }
+     */
     int getNumRegle(){
         return vectorRegle.size();
     }
     int getNumBoids(){
         return boids.size();
     }
+    
     void update(const float amount){
         for(int i=0; i< boids.size() ; i++){
             boids[i]->update(amount);
         }
     }
+    
+    
+    
+    
+    
+    
     // Alig
     void setValsAligBoids(float _alig, float _distAlig){
         for (int i=0; i<boids.size(); i++) {
@@ -143,15 +142,27 @@ public:
         b->setLead(_lead);
     }
     
-    // val global
+    // vals global
     void setValsGlobalBoids(float _alig, float _distAlig,float _sepa, float _distSepa,float _cohe, float _distCohe){
         for (int i=0; i<boids.size(); i++) {
-            setValsAligBoids(_alig, _distAlig);
-            setValsCoheBoids(_cohe, _distCohe);
-            setValsSepaBoids(_sepa, _distSepa);
+            setValsGlobalBoid(_alig,_distAlig,_sepa,_distSepa,_cohe, _distCohe, i);
         }
     }
+    void setValsGlobalBoid(float _alig, float _distAlig,float _sepa, float _distSepa,float _cohe, float _distCohe, int _at){
+        setValsAligBoid(_alig, _distAlig,_at);
+        setValsCoheBoid(_cohe, _distCohe, _at);
+        setValsSepaBoid(_sepa, _distSepa, _at);
+
+    }
     
+    
+    
+    void addRegle(){
+        vectorRegle.push_back(Regle());
+    }
+    void addRegleGroup(int _goup,int _regle){
+        vectorRegle[_regle].group=_goup;
+    }
 
 
 private:
