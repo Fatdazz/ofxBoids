@@ -229,14 +229,13 @@ private:
                 }
                 while (g->getNumRegle() < groupBoid.size()) {
                     g->addRegle();
-                    g->addRegleGroup(getNumGroups(), getNumGroups());
+                    g->addRegleGroup(g->getNumRegle(), getNumGroups());
 
                 }
             }
         }
     }
 
-    
     
 /*
 	

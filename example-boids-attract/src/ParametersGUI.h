@@ -2,7 +2,66 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "BoidsBehaviour.h"
+#include "VariableGlobal.h"
+
+
+class ParametresBoids{
+public:
+
+    ofParameterGroup    parametres;
+    
+    ofParameterGroup    separates;
+    ofParameter<float>  sepa;
+    ofParameter<float>  distsepa;
+    
+    ofParameterGroup    cohesion;
+    ofParameter<float>  cohe;
+    ofParameter<float>  disCohe;
+    
+    ofParameterGroup    align;
+    ofParameter<float>  ali;
+    ofParameter<float>  disAli;
+    
+    ofParameterGroup    ForceSpeed;
+    ofParameter<float>  maxForce;
+    ofParameter<float>  maxSpeed;
+    
+    ofParameter<ofColor> color;
+    
+    ParametresBoids(){
+        
+        separates.setName("Sepa");
+        separates.add(sepa.set("sepa",10,0,100));
+        separates.add(distsepa.set("distSepa",10,0,100));
+        
+        cohesion.setName("Cohe");
+        cohesion.add(cohe.set("cohe",10,0,100));
+        cohesion.add(disCohe.set("distCohe",10,0,100));
+        
+        align.setName("alig");
+        align.add(ali.set("ali",10,0,100));
+        align.add(disAli.set("distAli",10,0,100));
+        
+        ForceSpeed.setName("Force & Speed");
+        ForceSpeed.add(maxForce.set("Force",1000,0,5000));
+        ForceSpeed.add(maxSpeed.set("Speed",2,0,10));
+        
+        parametres.add(color);
+        parametres.add(separates);
+        parametres.add(cohesion);
+        parametres.add(align);
+        parametres.add(ForceSpeed);
+        
+        color.set("color",ofColor(127),ofColor(0,0),ofColor(255));
+        
+
+    }
+    
+    void nameGroup(string _name){
+        parametres.setName(_name);
+    }
+    
+};
 
 class ParametersGUI : public ofBaseApp {
 public:
@@ -10,51 +69,13 @@ public:
 	void update();
 	void draw();
 
-	int nbSubFlocks;
-
-	//	Parametres partagés avec ofApp
-	//	Bequilles à faire disparaitre quand ofBoids sera itérable par groupe
-	//	Groupe 1
-	ofParameter<float> separate1;
-	ofParameter<float> align1;
-	ofParameter<float> cohesion1;
-	ofParameter<float> distSeparation1;
-	ofParameter<float> distAlign1;
-	ofParameter<float> distCohesion1;
-	ofParameter<float> maxSpeed1;
-	ofParameter<float> maxForce1;
-	ofParameter<float> attraction1;
-	ofParameter<float> attractionDeviation1;
-	//	Groupe 2
-	ofParameter<float> separate2;
-	ofParameter<float> align2;
-	ofParameter<float> cohesion2;
-	ofParameter<float> distSeparation2;
-	ofParameter<float> distAlign2;
-	ofParameter<float> distCohesion2;
-	ofParameter<float> maxSpeed2;
-	ofParameter<float> maxForce2;
-	ofParameter<float> attraction2;
-	ofParameter<float> attractionDeviation2;
-
-	// Version pour itération sur N groupe.
-	vector<ofParameterGroup> boidsBehaviour;
-	//
-	ofParameter<float> separate;
-	ofParameter<float> align;
-	ofParameter<float> cohesion;
-	ofParameter<float> distSeparation;
-	ofParameter<float> distAlign;
-	ofParameter<float> distCohesion;
-	ofParameter<float> maxSpeed;
-	ofParameter<float> maxForce;
-	ofParameter<float> attraction;
-	ofParameter<float> attractionDeviation;
-
-	//	Version avec structure de donné behaviour	
-	//ofParameter<vector<BoidsBehaviour>> groupBehaviours;
-
-	//	Panels
-	vector<ofxPanel> parametersPanels;
-
+    
+    vector<ParametresBoids> paraBoids;
+    
+    //vector<ParametresBoids> GuiBoidsGroup;
+	//vector<ofxPanel> GUI;
+    ofxPanel           panel;
+    ofxGuiGroup        GUI;
+    
+    
 };
