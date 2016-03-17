@@ -37,21 +37,17 @@
 #include <cstdlib>
 #include <ctime>
 #include <ofMain.h>
-//#include "opencv2/opencv.hpp"
-
 
 class Flock2d;
 class GroupBoid2d;
 
 class Boid2d {
 public:
-///////////////////////////////////////////////////////////////////
-	//float x, y, vx, vy, ax, ay;
 	int life;
     bool lead;
     int group;
     
-    ofVec2f position, velocite, acceleration;
+	int position[2], velocite[2], acceleration[2];
     float separateGroup, alignGroup, cohesionGroup;
     float distSeparationGroup, distAlignGroup, distCohesionGroup;
     float maxTurnAlex, maxSpeedAlex, maxForceAlex;
@@ -64,19 +60,16 @@ public:
     float attr;
     
     Flock2d * flockPtr;
-    GroupBoid2d * groupPtr;
-///////////////////////////////////////////////////////////////////
-    
+    GroupBoid2d * groupPtr; 
  
 	Boid2d() {
-		//x = y = vx = vy = ax = ay = 0.0f;
-        position = velocite = acceleration = ofVec2f(0, 0);
+        position[0] = velocite[0] = acceleration[0] = 0;
+		position[1] = velocite[1] = acceleration[1] = 0;
+
 		life = 1;
-		flockPtr = NULL;
-        groupPtr = NULL;
+		flockPtr = nullptr;
+        groupPtr = nullptr;
 		attr = 0.0f;
-        
-        // new vabiable alex
         
         separateGroup= 20.0f;
         alignGroup = 12.0f;
@@ -92,22 +85,18 @@ public:
         
 	}
     
-    
-	
     Boid2d(Flock2d * flock, GroupBoid2d * _group);
 	
-	Boid2d * setFlock(Flock2d * flock);
+	void setFlock(Flock2d * flock);
 	
-
-////// set Valeurs
-    Boid2d * setValTotal(ofVec2f _position,
+	void setValTotal(int x, int y,
                     float _sepa,float _alig, float _cohe,
                     float _distSepa,float _distAlig, float _distCohe,
                     float _maxSpeed, float _maxForce,
                     float _attraction, float _attractiondeviation,
                     int _group) {
 
-        this->setLoc(_position);
+        this->setLoc(x, y);
         this->setGroup(_group);
         this->setLead(false);
         this->setValSepa(_sepa, _distSepa);
@@ -118,103 +107,79 @@ public:
         this->setValAttraction(_attraction, _attractiondeviation);
         this->setValAlignNoGroup(20, 20);
         this->setValSepaNoGroup(20,20);
-        return this;
     }
     
-    Boid2d * setLead( bool _lead){
+    void setLead( bool _lead){
         lead=_lead;
-        return this;
     }
     
-    Boid2d * setGroup(int _group){
+    void setGroup(int _group){
         group=_group;
-        return this;
     }
     
-    Boid2d * setLoc(ofVec2f _position) {
-        position = _position;
-        return this;
+	void setLoc(int x, int y) {
+		position[0] = x;
+		position[1] = y;
     }
     
-    Boid2d * setVel(ofVec2f _velocite) {
-        velocite=_velocite;
-        return this;
+    void setVel(int velX, int velY) {
+        velocite[0] = velX;
+		velocite[1] = velY;
     }
     
-    Boid2d * setValSepa(float _sepa, float _distSepa){
+    void setValSepa(float _sepa, float _distSepa){
         separateGroup = _sepa;
         distSeparationGroup = _distSepa;
-        return this;
     }
     
-    Boid2d * setValAlig(float _alig, float _distAlig){
+    void setValAlig(float _alig, float _distAlig){
         alignGroup = _alig;
         distAlignGroup = _distAlig;
-        return this;
     }
     
-    Boid2d * setValCohe(float _cohe, float _distCohe){
+    void setValCohe(float _cohe, float _distCohe){
         cohesionGroup = _cohe;
         distCohesionGroup = _distCohe;
-        return this;
     }
     
-    Boid2d * setMaxSpeed(float _maxSpeed){
+    void setMaxSpeed(float _maxSpeed){
         maxSpeedAlex=_maxSpeed;
-        return this;
     }
     
-    Boid2d * setMaxForce(float _maxForce){
+    void setMaxForce(float _maxForce){
         maxForceAlex=_maxForce;
-        return this;
     }
     
-    Boid2d * setValAttraction(float _attraction, float _attractiondeviation){
+    void setValAttraction(float _attraction, float _attractiondeviation){
         attractionAlex=_attraction;
         attractiondeviationAlex=_attractiondeviation;
-        return this;
     }
     
-    Boid2d * setValSepaNoGroup(float _sepaNoGroup, float _distSeparateNoGroup){
+    void setValSepaNoGroup(float _sepaNoGroup, float _distSeparateNoGroup){
         separateNoGroup=_sepaNoGroup;
         distAlignNoGroup=_distSeparateNoGroup;
-        return this;
     }
     
-    Boid2d * setValAlignNoGroup(float _alignNoGroup, float _distAlignNoGroup){
+    void setValAlignNoGroup(float _alignNoGroup, float _distAlignNoGroup){
         alignNoGroup=_alignNoGroup;
         distAlignNoGroup=_distAlignNoGroup;
-        return this;
     }
     
-////// fin set Valeurs alex
-
     void bounds();
     
-    void boudsColision();
-	
-	/*
-	 * main funcs
-	 */
-			
-    void update(const float amount);
-    
-	float* flock(const float amount, float *vec) ;
-	
-	
-	float* steer(float* target, float amount);// , float *steervec);
-	
-	float* cohesion( float *vec);	
-	float* align( float *vec) ;		
-	float* separate( float *vec) ;
+    void boundsColision();
 
+    void update(const float amount);
 	
+	
+	float* steer(float* target, float amount);
+
     float* flockfull(const float amount, float *vec);
     
 private:
     
-    float* foncSep(const float dx, const float dy, const float invD, Boid2d *other, float *sep);
-    float* foncCohe(const float d, const float variable,Boid2d *other, float *coh);
-    float* foncAlig(Boid2d *other, float *ali);
+    void separate(const float dx, const float dy, const float invD, Boid2d& other, float *sep);
+    void cohesion(const float d, const float variable,Boid2d& other, float *coh);
+    void align(Boid2d& other, float *ali);
     
 };

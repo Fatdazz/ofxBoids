@@ -63,8 +63,7 @@ public:
 
 class Flock2d {
 public:
-	
-	//vector <Boid2d *>				boids;
+
 	vector <AttractionPoint2d *>	attractionPoints;
     vector< AttractionLine2d *>     attractionLines;
     vector <GroupBoid2d *>          groupBoid;
@@ -107,7 +106,7 @@ public:
 		
 	}
     void addGoup(){
-        GroupBoid2d * g = new GroupBoid2d();
+        GroupBoid2d * g;
         groupBoid.push_back(g);
         // ajout update regle
     }
@@ -119,29 +118,29 @@ public:
     }
     
     void addBoid(int _numGroup){
-        GroupBoid2d * g = groupBoid.at(_numGroup);
-        Boid2d * b = new Boid2d(this,g);
+        GroupBoid2d* g = groupBoid.at(_numGroup);
+        Boid2d b(this, g);
         g->boids.push_back(b);
     }
     
-    void addBoidGroup(int _numGroup, ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
+    void addBoidGroup(int _numGroup, int x, int y,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
         GroupBoid2d * g = groupBoid.at(_numGroup);
         g->id=_numGroup;
-        Boid2d * b = new Boid2d(this,g);
-        b->setLoc(_position);
-        b->setValSepa(_sepa, _distSepa);
-        b->setValCohe(_cohe, _distCohe);
-        b->setValAlig(_alig, _distAlig);
-        b->setMaxForce(_maxForce);
-        b->setMaxSpeed(_maxSpeed);
-        b->setGroup(_numGroup);
+        Boid2d b = Boid2d(this, g);
+        b.setLoc(x, y);
+        b.setValSepa(_sepa, _distSepa);
+        b.setValCohe(_cohe, _distCohe);
+        b.setValAlig(_alig, _distAlig);
+        b.setMaxForce(_maxForce);
+        b.setMaxSpeed(_maxSpeed);
+        b.setGroup(_numGroup);
         g->boids.push_back(b);
     }
 
-    void addBoidsGroup(int _numBoids,int _numGroup, ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
+    void addBoidsGroup(int _numBoids,int _numGroup, int x, int y, float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
         
         for (int i=0; i<_numBoids; i++) {
-            addBoidGroup(_numGroup, _position, _sepa, _distSepa, _cohe, _distCohe, _alig, _distAlig, _maxForce, _maxSpeed);
+            addBoidGroup(_numGroup, x, y, _sepa, _distSepa, _cohe, _distCohe, _alig, _distAlig, _maxForce, _maxSpeed);
         }
     }
     
@@ -224,12 +223,12 @@ private:
         if(groupBoid.size()!= 0){
             for (int i=0; i<groupBoid.size()-1; i++) {
                 GroupBoid2d *g = groupBoid[i];
-                if(g->getNumRegle()== groupBoid.size()){
+                if(g->getNumRule()== groupBoid.size()){
                     continue;
                 }
-                while (g->getNumRegle() < groupBoid.size()) {
-                    g->addRegle();
-                    g->addRegleGroup(g->getNumRegle(), getNumGroups());
+                while (g->getNumRule() < groupBoid.size()) {
+                    g->addRule();
+                    g->addRuleGroup(g->getNumRule(), getNumGroups());
 
                 }
             }
