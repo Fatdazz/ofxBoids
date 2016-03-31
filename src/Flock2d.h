@@ -73,6 +73,10 @@ public:
 	
     void addGoup(){
         GroupBoid2d * g = new GroupBoid2d();
+        for (int i=0; i<groupBoid.size(); i++){
+           g->addRegle(); 
+        }
+        
         groupBoid.push_back(g);
         for (int i=0; i<groupBoid.size(); i++) {
             GroupBoid2d * g=groupBoid.at(i);
