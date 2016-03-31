@@ -27,17 +27,17 @@ public:
     
     Regle() {
         group = 0;
-        separateNoGroup = 0;
+        separateNoGroup = 10;
         alignNoGroup = 0;
         cohesionNoGroup =0;
-        distSeparationNoGroup = 0;
+        distSeparationNoGroup = 100;
         distAlignNoGroup = 0;
         distCohesionNoGroup =0;
         act=false;
     }
     
-    void initRegle(int _group, float _separateNoGroup, float _distSeparationNoGroup, float _cohesionNoGroup, float _distCohesionNoGroup, float _alignNoGroup, float _distAlignNoGroup){
-        group = _group;
+    void initRegle(float _separateNoGroup, float _distSeparationNoGroup, float _cohesionNoGroup, float _distCohesionNoGroup, float _alignNoGroup, float _distAlignNoGroup){
+        //group = _group;
         separateNoGroup = _separateNoGroup;
         alignNoGroup = _alignNoGroup;
         cohesionNoGroup =_cohesionNoGroup;
@@ -58,6 +58,7 @@ class GroupBoid2d {
 public:
     
     vector<Boid2d *>    boids;
+    vector<Regle> vectorRegle;
     int                 id;
     
     /*
@@ -154,17 +155,36 @@ public:
     }
     
     
+
     
     void addRegle(){
         vectorRegle.push_back(Regle());
     }
+    
+    void changeRegle(int _group, int _noGroup,
+                     float _separateNoGroup, float _distSeparationNoGroup,
+                     float _cohesionNoGroup, float _distCohesionNoGroup,
+                     float _alignNoGroup, float _distAlignNoGroup){
+        if(_group!=_noGroup){
+            vectorRegle[_noGroup].initRegle(_separateNoGroup, _distSeparationNoGroup,
+                                           _cohesionNoGroup, _distCohesionNoGroup,
+                                           _alignNoGroup, _distAlignNoGroup);
+        
+        }
+    }
+    void actAllRegle(int _group){
+        for (int i=0; i<vectorRegle.size(); i++) {
+            vectorRegle[i].actRegle();
+        }
+    }
+    /*
     void addRegleGroup(int _goup,int _regle){
         vectorRegle[_regle].group=_goup;
     }
-
+    */
 
 private:
-    vector<Regle>   vectorRegle;
+    
     bool            actRegle = false;
     
 };

@@ -209,24 +209,23 @@ float* Boid2d::flockfull(const float amount, float *vec) {
     
     for (int numGroup=0; numGroup < flockPtr->getNumGroups(); numGroup++) {
         GroupBoid2d * group = flockPtr->groupBoid.at(numGroup);
-    
-        for (int numBoids=0; numBoids < group->boids.size() ; numBoids ++) {
-            Boid2d * other = group->boids.at(numBoids);
+        if (this->groupPtr== group) {
+            for (int numBoids=0; numBoids < group->boids.size() ; numBoids ++) {
+                Boid2d * other = group->boids.at(numBoids);
         
             
-            float separatedist = other->distSeparationGroup;
-            float aligndist = other->distAlignGroup;
-            float cohesiondist = other->distCohesionGroup;
+                float separatedist = other->distSeparationGroup;
+                float aligndist = other->distAlignGroup;
+                float cohesiondist = other->distCohesionGroup;
             
-            float dx = other->position.x - position.x;
-            float dy = other->position.y - position.y;
-            float d = ABS(dx) + ABS(dy);
-            if (d <= 1e-7)
-                continue;
+                float dx = other->position.x - position.x;
+                float dy = other->position.y - position.y;
+                float d = ABS(dx) + ABS(dy);
+                if (d <= 1e-7)
+                    continue;
             
-            invD = 1.f / d;
-            
-            if (other->group==this->groupPtr->id) {
+                invD = 1.f / d;
+
                 // sep
                 if (d < separatedist) {
                     countsep++;
@@ -253,24 +252,55 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                     foncAlig(other, ali);
                 }
             }
-            
-            /*      ///////// regle des autre groupe a faire !! :-)
-             else if (other->group==!group){
-             if (d < distSeparationNoGroup ) {
-             countsep++;
-             invD = 1.f / d;
-             sep[0] -= dx * invD * separateNoGroup;
-             sep[1] -= dy * invD * separateNoGroup;
-             
-             }
-             if (d < distAlignNoGroup) {
-             countali++;
-             ali[0] -= other->velocite.x * alignNoGroup;
-             ali[1] -= other->velocite.y * alignNoGroup;
-             
-             }
-             }
-             */
+        }
+        else{
+            if (this->groupPtr->vectorRegle[numGroup].act) {
+                for (int numBoids=0; numBoids < group->boids.size() ; numBoids ++) {
+                    Boid2d * other = group->boids.at(numBoids);
+                    
+                    
+                    float separatedist = groupPtr->vectorRegle[numGroup].distSeparationNoGroup;
+                    float aligndist = groupPtr->vectorRegle[numGroup].distAlignNoGroup;
+                    float cohesiondist =groupPtr->vectorRegle[numGroup].distCohesionNoGroup;
+                    
+                    float dx = other->position.x - position.x;
+                    float dy = other->position.y - position.y;
+                    float d = ABS(dx) + ABS(dy);
+                    if (d <= 1e-7)
+                        continue;
+                    
+                    invD = 1.f / d;
+                    
+                    
+                    if (d < separatedist) {
+                        countsep++;
+                        sep[0] -= dx * invD * groupPtr->vectorRegle[numGroup].separateNoGroup;
+                        sep[1] -= dy * invD * groupPtr->vectorRegle[numGroup].separateNoGroup;
+                        
+                    }
+                    
+                    
+                    // coh
+                    if (d < cohesiondist) {
+                        countcoh++;
+                        coh[0] += other->position.x * groupPtr->vectorRegle[numGroup].cohesionNoGroup * d/1;
+                        coh[1] += other->position.y * groupPtr->vectorRegle[numGroup].cohesionNoGroup * d/1;
+                        
+                        
+                    }
+                    
+                    // ali
+                    if (d < aligndist) {
+                        countali++;
+                        ali[0] += other->velocite.x * groupPtr->vectorRegle[numGroup].alignNoGroup;
+                        ali[1] += other->velocite.y * groupPtr->vectorRegle[numGroup].alignNoGroup;
+                        
+                    }
+                    
+                }
+                
+                
+            }
         }
     }
     

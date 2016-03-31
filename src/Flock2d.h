@@ -74,11 +74,12 @@ public:
     void addGoup(){
         GroupBoid2d * g = new GroupBoid2d();
         groupBoid.push_back(g);
-        if (groupBoid.size()<2) {
-            for (int i=0; i<groupBoid.size(); i++) {
-                groupBoid.at(i)->addRegle();
-            }
+        for (int i=0; i<groupBoid.size(); i++) {
+            GroupBoid2d * g=groupBoid.at(i);
+            g->addRegle();
         }
+    
+
         // ajout update regle
     }
     
@@ -217,14 +218,21 @@ public:
         return attractionLines.size() > 0;
     }
     
+////////////////// regle /////////////////////
     
+    void changeRegle(int _group, int _noGroup,
+                     float _separateNoGroup, float _distSeparationNoGroup,
+                     float _cohesionNoGroup, float _distCohesionNoGroup,
+                     float _alignNoGroup, float _distAlignNoGroup){
+        groupBoid[_group]->changeRegle(_group, _noGroup, _separateNoGroup, _distSeparationNoGroup, _cohesionNoGroup, _distCohesionNoGroup, _alignNoGroup, _distAlignNoGroup);
+    }
     
     
     
     
 
 private:
-    
+/*
     void updateRegle(){
         if(groupBoid.size()!= 0){
             for (int i=0; i<groupBoid.size()-1; i++) {
@@ -234,13 +242,13 @@ private:
                 }
                 while (g->getNumRegle() < groupBoid.size()) {
                     g->addRegle();
-                    g->addRegleGroup(g->getNumRegle(), getNumGroups());
+                    //g->addRegleGroup(g->getNumRegle(), getNumGroups());
 
                 }
             }
         }
     }
-
+*/
     
 /*
 	
