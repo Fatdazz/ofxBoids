@@ -319,7 +319,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                     continue;
                 
                 // inbounds, calc
-                float invForce = point->force  / d  * attr;// newww   ////flockPtr->attraction     ; // neww
+                float invForce = point->force  / d ; // * attr // newww   ////flockPtr->attraction     ; // neww
                 dx *= invForce;
                 dy *= invForce;
                 
