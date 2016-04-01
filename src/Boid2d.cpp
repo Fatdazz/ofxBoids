@@ -253,8 +253,8 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                 }
             }
         }
-        else{
-            if (this->groupPtr->vectorRegle[numGroup].act) {
+        else{ // les autres groupes
+            if (this->groupPtr->vectorRegle[numGroup].act) { // si la regle est actif
                 for (int numBoids=0; numBoids < group->boids.size() ; numBoids ++) {
                     Boid2d * other = group->boids.at(numBoids);
                     
@@ -285,8 +285,6 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                         countcoh++;
                         coh[0] += other->position.x * groupPtr->vectorRegle[numGroup].cohesionNoGroup * d/1;
                         coh[1] += other->position.y * groupPtr->vectorRegle[numGroup].cohesionNoGroup * d/1;
-                        
-                        
                     }
                     
                     // ali
