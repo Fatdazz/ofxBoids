@@ -1,9 +1,9 @@
 #pragma once
 
 
-
 class AttractionLine2d {
 public:
+    
     float a[2],b[2],u[2];
     float force, sensorDist, lengthZone;
     int group;
@@ -29,13 +29,11 @@ public:
         lengthZone = _lengthZone;
         VecteurU();
         group = _group;
-        
     }
     
     void draw(){
         
     }
-    
 };
 
 

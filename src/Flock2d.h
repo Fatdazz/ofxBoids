@@ -27,8 +27,6 @@ public:
         _maxSpeed=0;
         _maxForce=0;
     }
-
-
 };
 
 
@@ -117,6 +115,18 @@ public:
         
         for (int i=0; i<_numBoids; i++) {
             addBoidGroup(_numGroup, _position, _sepa, _distSepa, _cohe, _distCohe, _alig, _distAlig, _maxForce, _maxSpeed);
+        }
+    }
+    
+    
+    void destroyBoidsGroups(){
+        for (int i=0; i<groupBoid.size(); i++) {
+            GroupBoid2d * g = groupBoid.at(i);
+            for (int j=0; j<g -> boids.size(); j++) {
+                Boid2d * b = g->boids.at(j);
+                delete b;
+            }
+            delete g;
         }
     }
     
