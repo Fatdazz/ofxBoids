@@ -20,8 +20,8 @@ int main( ){
     int leftMargin = 10;
     
     //	Flocks windows	//
-    settings.width = 600;
-    settings.height = 600;
+    settings.width = 1920;
+    settings.height = 1080;
     settings.setPosition(ofVec2f(leftMargin*2 + 600, topMargin));
     settings.resizable = true;
     shared_ptr<ofAppBaseWindow> flocksWindow = ofCreateWindow(settings);

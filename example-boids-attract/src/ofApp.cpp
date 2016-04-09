@@ -9,7 +9,7 @@ void ofApp::setup(){
         flockTest.addGroup();
         
         int lulu= ofRandom(30, 100);
-        for (int j=0; j<100; j++) {
+        for (int j=0; j<300; j++) {
             flockTest.addBoidGroup(i,
                                    ofVec2f(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight())),
                                    20 ,
@@ -23,9 +23,19 @@ void ofApp::setup(){
         }
     }
     
+    flockTest.addAttractionPoint(ofGetWidth()/2, ofGetHeight()/2, -20, 100); // attraction Point
+    
+    
+    //flockTest.changeRegle(0, 1, 30, 30, -20, 30, -20, 10);
+    
+    for (int i=0; i<NumGroup; i++) {
+        flockTest.groupBoid[i]->actAllRegle(i);
+    }
     parametersGui->paraBoids[0].color.set(ofColor(255, 0, 0));
     parametersGui->paraBoids[1].color.set(ofColor(0, 255, 0));
     parametersGui->paraBoids[2].color.set(ofColor(0, 0, 255));
+    
+    
 
 }
 
@@ -66,6 +76,9 @@ void ofApp::draw(){
         }
     }
     
+    ofSetColor(255, 0, 0, 25);
+    //flockTest.attractionPoints[0]->draw();
+
     
 }
 

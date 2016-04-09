@@ -9,5 +9,5 @@
 
 #include "ofMain.h"
 
-#define NumGroup 6
+#define NumGroup 3
 
