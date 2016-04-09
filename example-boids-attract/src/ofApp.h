@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "Flock2d.h"
 #include "ofxGui.h"
-#include "ParametersGUI.h"
+#include "parametersGUI.h"
 #include "VariableGlobal.h"
 
 class ofApp : public ofBaseApp{

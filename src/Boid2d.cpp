@@ -182,10 +182,11 @@ void Boid2d::flockfull(float amount, float vec[2]) {
 
   int numFlock = flockPtr->getNumGroups();
   for (int numGroup = 0; numGroup < numFlock; numGroup++) {
-    std::shared_ptr<GroupBoid2d> group = flockPtr->groupBoid.at(numGroup);
+    std::shared_ptr<GroupBoid2d>& group = flockPtr->groupBoid.at(numGroup);
     if (groupPtr == group) {
-      for (int numBoids = 0; numBoids < group->boids.size() ; numBoids ++) {
-	shared_ptr<Boid2d> other = group->boids.at(numBoids);
+      int size = group->boids.size();
+      for (int numBoids = 0; numBoids < size ; numBoids ++) {
+	std::shared_ptr<Boid2d>& other = group->boids.at(numBoids);
 	
 	float separatedist = other->distSeparationGroup;
 	float aligndist = other->distAlignGroup;
@@ -226,10 +227,10 @@ void Boid2d::flockfull(float amount, float vec[2]) {
     }
     else { // les autres groupes
       if (this->groupPtr->vectorRegle[numGroup].act) { // si la regle est actif
-	for (int numBoids=0; numBoids < group->boids.size() ; numBoids ++) {
-	  shared_ptr<Boid2d> other = group->boids.at(numBoids);
-                    
-                    
+	int size = group->boids.size();
+	for (int numBoids=0; numBoids < size ; numBoids ++) {
+	  std::shared_ptr<Boid2d>& other = group->boids.at(numBoids);
+                                        
 	  float separatedist = groupPtr->vectorRegle[numGroup].distSeparationNoGroup;
 	  float aligndist = groupPtr->vectorRegle[numGroup].distAlignNoGroup;
 	  float cohesiondist =groupPtr->vectorRegle[numGroup].distCohesionNoGroup;
@@ -325,7 +326,8 @@ void Boid2d::flockfull(float amount, float vec[2]) {
         
   // attraction en linge a testé
   if (flockPtr->hasAttractionLines()) {
-    for (int i=0; i<flockPtr->attractionLines.size(); i++) {
+    int size = flockPtr->attractionLines.size();
+    for (int i = 0; i< size; i++) {
       std::shared_ptr<AttractionLine2d>& line =flockPtr->attractionLines.at(i);
                 
       float AP[2];

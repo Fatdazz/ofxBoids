@@ -6,7 +6,7 @@ void ofApp::setup(){
     flockTest.setBounds(0, 0, ofGetWidth(), ofGetHeight());
     flockTest.setBoundmode(1);
     for (int i=0; i<NumGroup; i++) {
-        flockTest.addGoup();
+        flockTest.addGroup();
         
         int lulu= ofRandom(30, 100);
         for (int j=0; j<100; j++) {
@@ -52,18 +52,17 @@ void ofApp::draw(){
     
     
     for (int i=0; i<NumGroup; i++) {
-        GroupBoid2d *g =flockTest.groupBoid.at(i);
+        std::shared_ptr<GroupBoid2d>& g = flockTest.groupBoid.at(i);
         ofSetColor(parametersGui->paraBoids[i].color);
         for (int j=0; j<g->boids.size(); j++) {
-
-            Boid2d *b = g->boids.at(j);
+            std::shared_ptr<Boid2d>& b = g->boids.at(j);
             
             if (j==0) {
                 
             }
-            ofRect(b->position.x, b->position.y, 5,5);
+            ofDrawRectangle(b->position.x, b->position.y, 5,5);
             float lm = 10.f;
-            ofLine(b->position.x, b->position.y, b->position.x + b->velocite.x*lm, b->position.y + b->velocite.y*lm);
+            ofDrawLine(b->position.x, b->position.y, b->position.x + b->velocite.x*lm, b->position.y + b->velocite.y*lm);
         }
     }
     

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <ofMain.h>
+//#include "Flock2d.h"
+//#include "GroupBoids2d.h"
 
 class Flock2d;
 class GroupBoid2d;
@@ -25,8 +27,8 @@ class Boid2d {
     
   float attr;
 
-  shared_ptr<Flock2d> flockPtr;
-  shared_ptr<GroupBoid2d> groupPtr;
+  std::shared_ptr<Flock2d> flockPtr;
+  std::shared_ptr<GroupBoid2d> groupPtr;
   ///////////////////////////////////////////////////////////////////
     
  
@@ -163,10 +165,10 @@ class Boid2d {
   void flockfull( float amount, float vec[2]);
 
   
-    private:
+ private:
     
-    float* foncSep( float dx,  float dy,  float invD, shared_ptr<Boid2d> other, float sep[2]);
-    float* foncCohe( float d,  float variable, shared_ptr<Boid2d> other, float coh[2]);
-    float* foncAlig(shared_ptr<Boid2d> other, float ali[2]);
+  float* foncSep( float dx, float dy,  float invD, shared_ptr<Boid2d> other, float sep[2]);
+  float* foncCohe( float d, float variable, shared_ptr<Boid2d> other, float coh[2]);
+  float* foncAlig(shared_ptr<Boid2d> other, float ali[2]);
   
 };

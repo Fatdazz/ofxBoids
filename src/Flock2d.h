@@ -26,8 +26,6 @@ public:
       _maxSpeed=0;
       _maxForce=0;
     }
-
-
 };
 
 
@@ -96,6 +94,7 @@ class Flock2d {
     g->boids.push_back(std::make_shared<Boid2d>(thisPtr, g));
   }
     
+
   void addBoidGroup(int _numGroup,
 		    ofVec2f _position,
 		    float _sepa,
@@ -133,8 +132,8 @@ class Flock2d {
     for (int i=0; i<_numBoids; i++) {
       addBoidGroup(_numGroup, _position, _sepa, _distSepa, _cohe, _distCohe, _alig, _distAlig, _maxForce, _maxSpeed);
     }
-  }
-    
+  }        
+      
   void setValeursBoidsGroup(int _numGroup,
 			    float _sepa,
 			    float _distSepa,
@@ -144,7 +143,7 @@ class Flock2d {
 			    float _distAlig,
 			    float _maxForce,
 			    float _maxSpeed ){
-    shared_ptr<GroupBoid2d> g = groupBoid[_numGroup];
+    std::shared_ptr<GroupBoid2d>& g = groupBoid[_numGroup];
     g->setValsGlobalBoids( _alig, _distAlig, _sepa, _distSepa, _cohe, _distCohe);
     g->setMaxSpeedBoids(_maxSpeed);
     g->setMaxForceBoids(_maxForce);  
@@ -191,8 +190,7 @@ class Flock2d {
   void updateGroup(int _numGroup){
     groupBoid[_numGroup]->update(dt);
   }
-    
-  ///////////////////////////////// Bounds //////////////////////////////////
+      
   void setBounds(float minx, float miny, float maxx, float maxy) {
     minX = minx;
     minY = miny;

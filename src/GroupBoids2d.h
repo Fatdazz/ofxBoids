@@ -12,9 +12,6 @@
 //#define GroupBoids2d_h
 #include <ofMain.h>
 #include "Boid2d.h"
-
-
-
 //#endif /* GroupBoids2d_h */
 
 class Regle{
