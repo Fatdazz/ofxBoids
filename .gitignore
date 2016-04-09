@@ -1,7 +1,7 @@
 addons.make
 config.make
 Makefile ofBoids.qbs
-
+compile_commands.json
 
 # Created by https://www.gitignore.io/api/c++,windows,osx,linux,visualstudio,visualstudiocode,emacs,xcode
 
