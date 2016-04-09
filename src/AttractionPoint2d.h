@@ -30,6 +30,17 @@ public:
         VecteurU();
         group = _group;
     }
+    AttractionLine2d(ofPoint _a, ofPoint _b, float _force, float _sensorDist, float _lengthZone, int _group){
+        a[0] = _a.x;
+        a[1] = _a.y;
+        b[0] = _b.x;
+        b[1] = _b.y;
+        force = _force;
+        sensorDist = _sensorDist;
+        lengthZone = _lengthZone;
+        VecteurU();
+        group = _group;
+    }
     
     void draw(){
         ofSetColor(ofColor::red);

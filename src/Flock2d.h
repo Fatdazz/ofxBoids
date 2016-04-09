@@ -204,6 +204,12 @@ public:
         
     }
     // creation d'une surcharge
+    Flock2d * addAttrationLine(ofPoint _a, ofPoint _b, float _force, float _sensorDist, float _lengthZone, int _group){
+        AttractionLine2d *al = new AttractionLine2d( _a, _b, _force, _sensorDist, _lengthZone, _group);
+        
+        attractionLines.push_back(al);
+        return this;
+    }
     Flock2d * addAttrationLine(float _a[2], float _b[2], float _force, float _sensorDist, float _lengthZone, int _group){
         
         AttractionLine2d * al = new AttractionLine2d(&_a[2], &_b[2], _force, _sensorDist, _lengthZone, _group);
