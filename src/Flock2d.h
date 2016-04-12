@@ -216,6 +216,13 @@ public:
         attractionLines.push_back(al);
         return this;
     }
+    Flock2d * destroyAllLine(){
+        for (int i=0; i<attractionLines.size(); i++) {
+            AttractionLine2d * al = attractionLines.at(i);
+            delete al;
+        }
+        attractionLines.clear();
+    }
     
     bool hasAttractionLines() {
         return attractionLines.size() > 0;
