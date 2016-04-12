@@ -39,7 +39,7 @@ int main( ){
     shared_ptr<ParametersGUI> flocksGroupsParametersGUI(new ParametersGUI);
     
     
-    flocksApp->parametersGui = flocksGroupsParametersGUI;
+    flocksApp->boids.parametersGui = flocksGroupsParametersGUI;
     
     
     //	Run	///////////////////////////////////////////////////////////////////////////////

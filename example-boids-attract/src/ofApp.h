@@ -1,10 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Flock2d.h"
-#include "ofxGui.h"
-#include "parametersGUI.h"
-#include "VariableGlobal.h"
+
+#include "BoidsThread.h"
 
 class ofApp : public ofBaseApp{
 
@@ -25,8 +23,6 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    Flock2d  flockTest;
-		
+        BoidsThread boids;
     
-    shared_ptr<ParametersGUI> parametersGui;
 };
