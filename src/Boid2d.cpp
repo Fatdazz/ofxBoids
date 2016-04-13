@@ -359,10 +359,10 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                     continue;
                 if (d > line->sensorDist)
                     continue;
-                
+                /*
                 if (line->u[0] * line->u[0]>ABS(line->a[0]-AP[0]) || line->u[0] * line->u[0]>ABS(line->b[0]-AP[0]) || line->u[1] * line->u[1]>ABS(line->a[1]-AP[1]) || line->u[1] * line->u[1]>ABS(line->b[1]-AP[1]))
                     continue;
-                
+                */
                 
                 float invForce = line->force  / d  ;//* attr;// newww   ////flockPtr->attraction     ; //
                 
