@@ -7,7 +7,7 @@
  */
 #include "Boid2d.h"
 #include "Flock2d.h"
-//#include "ofMain.h"
+#include "ofMain.h"
 
 Boid2d::Boid2d(Flock2d * _flock, GroupBoid2d * _group) {
 		Boid2d();
@@ -349,20 +349,16 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                 float dx = AP[0] - position.x;
                 float dy = AP[1] - position.y;
                 float d = ABS(dx) + ABS(dy);
-                /*
-                ofSetColor(ofColor::yellow);
-                ofSetLineWidth(3);
-                ofDrawLine(AP[0], AP[1], this->position.x,this->position.y);
-                ofSetLineWidth(1);
-                */
+                
+
                 if (d <= 1e-7)
                     continue;
                 if (d > line->sensorDist)
                     continue;
-                /*
-                if (line->u[0] * line->u[0]>ABS(line->a[0]-AP[0]) || line->u[0] * line->u[0]>ABS(line->b[0]-AP[0]) || line->u[1] * line->u[1]>ABS(line->a[1]-AP[1]) || line->u[1] * line->u[1]>ABS(line->b[1]-AP[1]))
+                
+                if (!(((line->a[0]<=AP[0] && AP[0]<=line->b[0])||(line->b[0]<=AP[0] && AP[0]<=line->a[0])) && ((line->a[1]<=AP[1] && AP[1]<=line->b[1])||(line->b[1]<=AP[1] && AP[1]<=line->a[1])))) {
                     continue;
-                */
+                }
                 
                 float invForce = line->force  / d  ;//* attr;// newww   ////flockPtr->attraction     ; //
                 

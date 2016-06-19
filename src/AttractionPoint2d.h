@@ -46,6 +46,15 @@ public:
         ofSetColor(ofColor::red);
         ofSetLineWidth(2);
         ofDrawLine(a[0], a[1], b[0], b[1]);
+        /*
+        ofSetColor(ofColor::blue);
+        ofDrawRectangle(u[0], u[1], 3, 3);
+        ofSetLineWidth(1);*/
+    }
+    void draw(ofColor _color){
+        ofSetColor(_color);
+        ofSetLineWidth(2);
+        ofDrawLine(a[0], a[1], b[0], b[1]);
         ofSetColor(ofColor::blue);
         ofDrawRectangle(u[0], u[1], 3, 3);
         ofSetLineWidth(1);

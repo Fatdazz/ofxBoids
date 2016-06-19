@@ -74,11 +74,6 @@ public:
         }
     }
     
-    
-    
-    
-    
-    
     // Alig
     void setValsAligBoids(float _alig, float _distAlig){
         for (int i=0; i<boids.size(); i++) {
