@@ -228,6 +228,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                 }
             }
         }
+		/*
         else{ // les autres groupes
             if (this->groupPtr->vectorRegle[numGroup].act) { // si la regle est actif
                 for (int numBoids=0; numBoids < group->boids.size() ; numBoids ++) {
@@ -274,7 +275,7 @@ float* Boid2d::flockfull(const float amount, float *vec) {
                 
                 
             }
-        }
+        }*/
     }
     
         if (countsep > 0) {
