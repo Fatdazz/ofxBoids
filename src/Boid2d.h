@@ -144,6 +144,10 @@ public:
     
     void update(const float amount);
     
+    void updateNew( const float amount, vector<Boid2d*> otherBoids);
+    float* flockfullNew(const float amount, float *vec, vector<Boid2d*> *otherBoids);
+
+    
     
     
 private:

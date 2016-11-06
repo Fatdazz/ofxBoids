@@ -1,10 +1,4 @@
-/*
- *  Boid3d.cpp
- *
- *  Created by andré sier on 20130225.
- *  Copyright 2013 s373.net/x. All rights reserved.
- *
- */
+
 
 
 

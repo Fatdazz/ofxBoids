@@ -1,10 +1,4 @@
-/*
- *  Boid2d.cpp
- *
- *  Created by andr√© sier on 20130225.
- *  Copyright 2013 s373.net/x. All rights reserved.
- *
- */
+
 #include "Boid2d.h"
 #include "Flock2d.h"
 #include "ofMain.h"
@@ -131,6 +125,46 @@ void Boid2d:: update(const float amount) {
     //	ax = 0;
     //	ay = 0;
 }
+
+void Boid2d:: updateNew(const float amount, vector<Boid2d *>  otherBoids){
+    acceleration.x = 0;
+    acceleration.y = 0;
+    float *vec = new float[2];
+    vec[0] = 0.0f;
+    vec[1] = 0.0f;
+    //flockfull(amount, vec, &flockPtr->mapBoid[i][j]);
+    
+    acceleration.x += vec[0];// *amount;
+    acceleration.y += vec[1];// *amount;
+    delete [] vec;
+    
+    // mettre la map de force ici <-----------------------------------------------------
+    
+    float distMaxForce = ABS(acceleration.x) + ABS(acceleration.y);
+    if (distMaxForce > maxForce) {
+        distMaxForce = maxForce / distMaxForce;
+        acceleration *= distMaxForce;
+    }
+
+    velocite += acceleration;
+    // limit speed
+    float distMaxSpeed = ABS(velocite.x) + ABS(velocite.y);
+    if (distMaxSpeed > maxSpeed) {
+        distMaxSpeed = maxSpeed / distMaxSpeed;
+        velocite *= distMaxSpeed;
+    }
+    position += velocite *amount;
+    
+    //x += ((rand()%200)-100)/100 * 5;
+    //y += ((rand()%200)-100)/100 * 5;
+    bounds();
+    // reset acc on end
+    //	ax = 0;
+    //	ay = 0;
+
+    
+}
+
 /////////// code alex flockfull /////////////////
 float* Boid2d::flockfull(const float amount, float *vec, vector<Boid2d*> *BoidsSlect) {
     //	float * vec = new float[2];
@@ -154,7 +188,6 @@ float* Boid2d::flockfull(const float amount, float *vec, vector<Boid2d*> *BoidsS
     
     // main full loop track all forces boid other boids
     
-    for (int i=0; i < BoidsSlect->size(); i++) {
         for (int i=0; i < BoidsSlect->size(); i++) {
         Boid2d * other = BoidsSlect->at(i);
         if (this->groupPtr == other->groupPtr) {
@@ -188,10 +221,8 @@ float* Boid2d::flockfull(const float amount, float *vec, vector<Boid2d*> *BoidsS
                 countali++;
                 foncAlig(other, ali);
             }
+            }
         }
-    }
-
-    
     if (countsep > 0) {
         const float invForSep = 1 / (float) countsep; // faire invForsep une moyenne
         sep[0] *= invForSep;
@@ -209,16 +240,6 @@ float* Boid2d::flockfull(const float amount, float *vec, vector<Boid2d*> *BoidsS
         coh = steer(coh, 1);
     }
     
-    // if using extra forces, place here
-    // sep[0] *= flock.separate;
-    // sep[1] *= flock.separate;
-    //
-    // ali[0] *= flock.align;
-    // ali[1] *= flock.align;
-    //
-    // coh[0] *= flock.cohesion;
-    // coh[1] *= flock.cohesion;
-    ///////////////////////////////
     vec[0] = sep[0] + ali[0] + coh[0] + attrForce[0];
     vec[1] = sep[1] + ali[1] + coh[1] + attrForce[1];
     const float d = ABS(vec[0]) + ABS(vec[1]);
@@ -237,6 +258,94 @@ float* Boid2d::flockfull(const float amount, float *vec, vector<Boid2d*> *BoidsS
 }
 
 
+float* Boid2d::flockfullNew(const float amount, float *vec, vector<Boid2d*> *otherBoids) {
+
+    float *sep = new float[2];
+    float *ali = new float[2];
+    float *coh = new float[2];
+    float *attrForce = new float[2];
+    
+    for (int i=0; i<2; i++) {
+        sep[i] = 0.0f;
+        ali[i] = 0.0f;
+        coh[i] = 0.0f;
+        attrForce[i] = 0.0f;
+    }
+
+    
+    int countsep = 0, countali = 0, countcoh = 0;
+    float invD = 0;
+
+    for (int i=0; i < otherBoids->size(); i++) {
+        Boid2d * other = otherBoids->at(i);
+        if (this->groupPtr == other->groupPtr) {
+            
+            float separatedist = other->distSeparationGroup;
+            float aligndist = other->distAlignGroup;
+            float cohesiondist = other->distCohesionGroup;
+            
+            float dx = other->position.x - position.x;
+            float dy = other->position.y - position.y;
+            float d = ABS(dx) + ABS(dy);
+            if (d <= 1e-7)
+                continue;
+            invD = 1.f / d;
+            if (d < separatedist) { // sep
+                countsep++;
+                foncSep(dx, dy, invD, other,sep);
+            }
+            if (d < cohesiondist) { // coh
+                countcoh++;
+                if (other->lead) {
+                    /// a modif
+                    foncCohe(d, 20.0, other, coh);
+                    //cout << " I am a leader !!! "<< endl;
+                }
+                else{
+                    foncCohe(d, 1.0 , other, coh);
+                }
+            }
+            if (d < aligndist) { // ali
+                countali++;
+                foncAlig(other, ali);
+            }
+        }
+    }
+    
+    
+    if (countsep > 0) {
+        const float invForSep = 1 / (float) countsep; // faire invForsep une moyenne
+        sep[0] *= invForSep;
+        sep[1] *= invForSep;
+    }
+    if (countali > 0) {
+        const float invForAli = 1 / (float) countali; // final float invForAli = 1f / (float) countali;
+        ali[0] *= invForAli;
+        ali[1] *= invForAli;
+    }
+    if (countcoh > 0) {
+        const float invForCoh = 1 / (float) countcoh;
+        coh[0] *= invForCoh;
+        coh[1] *= invForCoh;
+        coh = steer(coh, 1);
+    }
+
+    vec[0] = sep[0] + ali[0] + coh[0] + attrForce[0];
+    vec[1] = sep[1] + ali[1] + coh[1] + attrForce[1];
+    const float d = ABS(vec[0]) + ABS(vec[1]);
+    if (d > 0) {
+        float invDist = amount / d;
+        vec[0] *= invDist;
+        vec[1] *= invDist;
+    }
+    vec[0] *= amount;
+    vec[1] *= amount;
+    delete[] sep;
+    delete[] ali;
+    delete[] coh;
+    delete[] attrForce;
+    return vec;
+}
 
 float * Boid2d::foncSep(const float dx, const float dy, const float invD, Boid2d *other, float *sep){
     sep[0] -= dx * invD * other->separateGroup ;
