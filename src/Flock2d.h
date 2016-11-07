@@ -45,6 +45,7 @@ public:
     void addBoid(){
         Boid2d * b = new Boid2d(this);
         totalBoid.push_back(b);
+        
     }
     
     void addBoid(ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
@@ -57,25 +58,6 @@ public:
         b->setMaxSpeed(_maxSpeed);
         totalBoid.push_back(b);
     }
-    
-    void destroyBoid(Boid2d *b){
-        for (int i=0; i<totalBoid.size(); i++) {
-            if (totalBoid.at(i) == b) {
-                totalBoid.erase(totalBoid.begin()+i-1);
-            }
-        }
-        for (int i=0; i<SegWidth; i++) {
-            for (int j=0; j<SegHeight; j++) {
-                for (int k=0; k<mapBoid[i][j].size(); k++){
-                    if (mapBoid[i][j].at(k) == b){
-                        mapBoid[i][j].erase(mapBoid[i][j].begin()+k-1);
-                    }
-                }
-            }
-        }
-        // intŽgrer group
-        delete b;
-    }
     void destroyBoidsGroups(){
     /// a faire ou pas
     }
@@ -85,18 +67,16 @@ public:
     int getNumBoids(){
         return totalBoid.size();
     }
-    void update() {
-        for (int i=0; i<totalBoid.size(); i++) {
-            totalBoid[i]->update(dt);
-        }
-
-    }
-    void update2(vector<Boid2d *> *v){
-        for (int i=0; i< v->size(); i++) {
-
+    
+    void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids ){
+        for (int i=0; i< vectorThis->size(); i++) {
+            vectorThis->at(i)->updateNew(dt, otherBoids);
         }
     }
     
+    void updateSimple(){
+        update(&totalBoid, &totalBoid);
+    }
     
 ///////////////////////////////// Bounds //////////////////////////////////
     Flock2d * setBounds(float minx, float miny, float maxx, float maxy) {

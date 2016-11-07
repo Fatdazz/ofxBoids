@@ -9,6 +9,7 @@ Boid2d::Boid2d(Flock2d * _flock, GroupBoid2d * _group) {
     this->groupPtr = _group;
 }
 Boid2d::Boid2d(Flock2d * _flock){
+    Boid2d();
     this->flockPtr = _flock;
     this->groupPtr = NULL;
 }
@@ -53,13 +54,15 @@ void Boid2d::bounds() {
     }
     
 }
-void Boid2d:: updateNew(const float amount, vector<Boid2d *>  otherBoids){
+
+void Boid2d:: updateNew(const float amount, vector<Boid2d *>  *otherBoids){
     acceleration.x = 0;
     acceleration.y = 0;
     float *vec = new float[2];
     vec[0] = 0.0f;
     vec[1] = 0.0f;
     //flockfull(amount, vec, &flockPtr->mapBoid[i][j]);
+    flockfullNew(amount, vec, otherBoids);
     
     acceleration.x += vec[0];// *amount;
     acceleration.y += vec[1];// *amount;
@@ -72,7 +75,6 @@ void Boid2d:: updateNew(const float amount, vector<Boid2d *>  otherBoids){
         distMaxForce = maxForce / distMaxForce;
         acceleration *= distMaxForce;
     }
-
     velocite += acceleration;
     // limit speed
     float distMaxSpeed = ABS(velocite.x) + ABS(velocite.y);
@@ -91,6 +93,7 @@ void Boid2d:: updateNew(const float amount, vector<Boid2d *>  otherBoids){
 
     
 }
+
 float* Boid2d::flockfullNew(const float amount, float *vec, vector<Boid2d*> *otherBoids) {
 
     float *sep = new float[2];
@@ -179,6 +182,7 @@ float* Boid2d::flockfullNew(const float amount, float *vec, vector<Boid2d*> *oth
     delete[] attrForce;
     return vec;
 }
+
 float* Boid2d::steer(float* target, float amount){ //, float *steervec) {
     
     //	float steer[] = {0.f, 0.f}; //new float[2];

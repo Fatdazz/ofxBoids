@@ -70,7 +70,7 @@ public:
     
     void update(const float amount){
         for(int i=0; i< boids.size() ; i++){
-            boids[i]->update(amount);
+            //boids[i]->update(amount); <-----
         }
     }
     

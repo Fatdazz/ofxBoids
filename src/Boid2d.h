@@ -34,9 +34,7 @@ public:
         flockPtr = NULL;
         groupPtr = NULL;
         attr = 10.0f;
-        
         // new vabiable alex
-        
         separateGroup= 20.0f;
         alignGroup = 12.0f;
         cohesionGroup = 3.0f;
@@ -122,11 +120,9 @@ public:
     
 
     ///// fonction Utile /////
-    void updateNew( const float amount, vector<Boid2d*> otherBoids);
+    void updateNew( const float amount, vector<Boid2d*> *otherBoids);
 
-    
-    
-    
+        
 private:
     float* flockfullNew(const float amount, float *vec, vector<Boid2d*> *otherBoids);
     float* steer(float* target, float amount);
