@@ -68,7 +68,11 @@ void Boid2d:: updateNew(const float amount, vector<Boid2d *>  *otherBoids){
     acceleration.y += vec[1];// *amount;
     delete [] vec;
     
+    float _x = max(0.0f, min( (float) this->position.x *(SegWidth)/ofGetWindowWidth(), (float) SegWidth-1));
+    float _y = max(0.0f, min( (float) this->position.y *(SegHeight)/ofGetWindowHeight(), (float) SegHeight-1));
+    
     // mettre la map de force ici <-----------------------------------------------------
+    acceleration=acceleration+(flockPtr->vectorField[trunc(_x)][trunc(_y)])/10; /// je ne sais pas pourquoi il faut div pas 10
     
     float distMaxForce = ABS(acceleration.x) + ABS(acceleration.y);
     if (distMaxForce > maxForce) {
@@ -79,6 +83,7 @@ void Boid2d:: updateNew(const float amount, vector<Boid2d *>  *otherBoids){
     // limit speed
     float distMaxSpeed = ABS(velocite.x) + ABS(velocite.y);
     if (distMaxSpeed > maxSpeed) {
+        
         distMaxSpeed = maxSpeed / distMaxSpeed;
         velocite *= distMaxSpeed;
     }

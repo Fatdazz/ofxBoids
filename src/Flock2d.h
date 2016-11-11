@@ -2,8 +2,8 @@
 #include "ofMain.h"
 #include "Boid2d.h"
 #include "GroupBoids2d.h"
-#define SegWidth 10
-#define SegHeight 10
+#define SegWidth 30
+#define SegHeight 30
 
 
 class Flock2d {
@@ -11,11 +11,16 @@ public:
     vector <GroupBoid2d *>          groupBoid;
     vector <Boid2d *>               totalBoid;
     vector <Boid2d *>               mapBoid[SegWidth][SegHeight];
-
+    
     // bounds
 	float minX, minY, maxX, maxY, boundsWidth, boundsHeight;
 	int boundmode;
 	
+    /// vectorField
+    
+    bool                            isVectorField;
+    vector<vector<ofVec2f>>         vectorField;
+    
 	// new
 	float dt;
 	float attraction, attractiondeviation;
@@ -26,6 +31,10 @@ public:
 		boundmode = 0;
 		dt = 1.0f;
 		attraction = attractiondeviation = 0.0f;
+        
+        for (int i=0; i<SegWidth; i++) {
+            vectorField.push_back(vector<ofVec2f>(SegHeight,ofVec2f(0, 0)));
+        }
 	}
 
     void clear(){
@@ -88,7 +97,6 @@ public:
         boundsHeight = maxY - minY;
         return this;
     }
-    
     int getBoundmode() {
         return boundmode;
     }
