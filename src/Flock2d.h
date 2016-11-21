@@ -10,7 +10,11 @@ class Flock2d {
 public:
     vector <GroupBoid2d *>          groupBoid;
     vector <Boid2d *>               totalBoid;
+    
+    // mapBoids
+    bool                            isMapBoids;
     vector <Boid2d *>               mapBoid[SegWidth][SegHeight];
+    vector<vector<vector<Boid2d *>>> mapBoids;
     
     // bounds
 	float minX, minY, maxX, maxY, boundsWidth, boundsHeight;
@@ -22,8 +26,9 @@ public:
     vector<vector<ofVec2f>>         vectorField;
     
 	// new
-	float dt;
 	float attraction, attractiondeviation;
+    float dt;
+
 
 	Flock2d(){
 		//clear();
@@ -66,6 +71,7 @@ public:
         b->setMaxForce(_maxForce);
         b->setMaxSpeed(_maxSpeed);
         totalBoid.push_back(b);
+        b->addRankingMapBoids();
     }
     void destroyBoidsGroups(){
     /// a faire ou pas
@@ -77,9 +83,10 @@ public:
         return totalBoid.size();
     }
     
+    
     void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids ){
         for (int i=0; i< vectorThis->size(); i++) {
-            vectorThis->at(i)->updateNew(dt, otherBoids);
+            vectorThis->at(i)->updateNew(otherBoids, &vectorField);
         }
     }
     
@@ -108,5 +115,7 @@ public:
 
 
 private:
+    
+
 
 };
