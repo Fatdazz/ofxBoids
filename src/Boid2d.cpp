@@ -74,14 +74,14 @@ void Boid2d:: updateNew(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *
     
     
     if (flockPtr->isVectorField) {
-
+        
         acceleration = acceleration+(_fieldVector->at(
                                                       trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1))))
                                      .at(
                                          trunc(max(0.0f, min((float) this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)))))
         /10;
         
-
+        
     }
     
     float distMaxForce = ABS(acceleration.x) + ABS(acceleration.y);
@@ -107,7 +107,7 @@ void Boid2d:: updateNew(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *
     
     if (position.x < 0 || position.x > flockPtr->maxX) {
         cout << " il y a " << position.x << endl;
-    
+        
     }
     
     if (flockPtr->isMapBoids) {
@@ -115,7 +115,7 @@ void Boid2d:: updateNew(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *
     }
 }
 float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
-
+    
     float *sep = new float[2];
     float *ali = new float[2];
     float *coh = new float[2];
@@ -127,11 +127,11 @@ float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
         coh[i] = 0.0f;
         attrForce[i] = 0.0f;
     }
-
+    
     
     int countsep = 0, countali = 0, countcoh = 0;
     float invD = 0;
-
+    
     for (int i=0; i < otherBoids->size(); i++) {
         Boid2d * other = otherBoids->at(i);
         if (this->groupPtr == other->groupPtr) {
@@ -185,7 +185,7 @@ float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
         coh[1] *= invForCoh;
         coh = steer(coh, 1);
     }
-
+    
     vec[0] = sep[0] + ali[0] + coh[0] + attrForce[0];
     vec[1] = sep[1] + ali[1] + coh[1] + attrForce[1];
     const float d = ABS(vec[0]) + ABS(vec[1]);
@@ -253,13 +253,13 @@ float * Boid2d::foncAlig(Boid2d *other, float *ali){
 void Boid2d:: addRankingMapBoids(){
     int _x = trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1)));
     int _y = trunc(max(0.0f, min((float) this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)));
-        flockPtr->mapBoids[_x][_y].push_back(this);
+    flockPtr->mapBoids[_x][_y].push_back(this);
 }
 void Boid2d::delectRankingMapBoids(){
     
     int _x = trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1)));
     int _y = trunc(max(0.0f, min((float)this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)));
-
+    
     for (int i=0 ; i< flockPtr->mapBoids[_x][_y].size() ; i++) {
         if (this == flockPtr->mapBoids[_x][_y].at(i)) {
             
