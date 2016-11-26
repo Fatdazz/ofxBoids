@@ -8,15 +8,25 @@
 
 class Flock2d {
 public:
+    ////////////////////////////////////// Vector Boid ////////////////////////////////
+    
     vector <GroupBoid2d *>          groupBoid;
     vector <Boid2d *>               totalBoid;
     
-    // mapBoids
+    /////////////////////////////////////// mapBoids////////////////////////////////////
     bool                            isMapBoids;
     vector <Boid2d *>               mapBoid[SegWidth][SegHeight];
     vector<vector<vector<Boid2d *>>> mapBoids;
     
-    // bounds
+    void initMapBoids(){
+        vector<Boid2d*>     a;
+        vector<vector<Boid2d*>>    b = vector<vector<Boid2d *>>(SegHeight,a);
+        mapBoids = vector<vector<vector<Boid2d *>>>(SegWidth,b);
+        isMapBoids = true;
+    }
+    
+    
+    /////////////////////////////////////// bounds//////////////////////////////////////
 	float minX, minY, maxX, maxY, boundsWidth, boundsHeight;
 	int boundmode;
 	
@@ -87,6 +97,12 @@ public:
     void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids ){
         for (int i=0; i< vectorThis->size(); i++) {
             vectorThis->at(i)->updateNew(otherBoids, &vectorField);
+        }
+    }
+    
+    void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
+        for (int i =0; i<vectorThis->size(); i++) {
+            vectorThis->at(i)->updateNew(otherBoids, _vectorField);
         }
     }
     
