@@ -54,7 +54,7 @@ void Boid2d::bounds() {
     }
     
 }
-void Boid2d:: updateNew(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
+void Boid2d:: updateNew(list<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
     
     if (flockPtr->isMapBoids) {
         delectRankingMapBoids();
@@ -114,7 +114,7 @@ void Boid2d:: updateNew(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *
         addRankingMapBoids();
     }
 }
-float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
+float* Boid2d::flockfullNew(float *vec, list<Boid2d*> *otherBoids) {
     
     float *sep = new float[2];
     float *ali = new float[2];
@@ -132,8 +132,8 @@ float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
     int countsep = 0, countali = 0, countcoh = 0;
     float invD = 0;
     
-    for (int i=0; i < otherBoids->size(); i++) {
-        Boid2d * other = otherBoids->at(i);
+    for (list<Boid2d*>::iterator i =otherBoids->begin(); i != otherBoids->end(); i++) {
+        Boid2d * other =  i.operator*();
         if (this->groupPtr == other->groupPtr) {
             
             float separatedist = other->distSeparationGroup;
@@ -202,6 +202,8 @@ float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
     delete[] attrForce;
     return vec;
 }
+
+
 float * Boid2d::steer(float* target, float amount){ //, float *steervec) {
     
     //	float steer[] = {0.f, 0.f}; //new float[2];
@@ -260,11 +262,26 @@ void Boid2d::delectRankingMapBoids(){
     int _x = trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1)));
     int _y = trunc(max(0.0f, min((float)this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)));
     
-    for (int i=0 ; i< flockPtr->mapBoids[_x][_y].size() ; i++) {
-        if (this == flockPtr->mapBoids[_x][_y].at(i)) {
+    for(list<Boid2d*>::iterator iter=flockPtr->mapBoids[_x][_y].begin() ; iter != flockPtr->mapBoids[_x][_y].end(); iter++) {
+        /*
+        flockPtr->mapBoids[_x][_y];
+        
+        //iter.operator*();
+        
+        cout << this << "      " << iter.operator*()<< endl;
+        iter++;
+        cout << this << "      " << iter.operator*()<< endl;
+
+        
+        if (this ==  iter.operator*()) {
             
-            flockPtr->mapBoids[_x][_y].erase(flockPtr->mapBoids[_x][_y].begin()+i);
             
+            //flockPtr->mapBoids[_x][_y].erase(flockPtr->mapBoids[_x][_y].begin()+i);
+            flockPtr->mapBoids[_x][_y].erase(iter);
+         
         }
+         */
+        cout << "X: "<< _x << "    Y: " << _y << endl;
+        cout << this << "      " << iter.operator*()<< endl;
     }
 }

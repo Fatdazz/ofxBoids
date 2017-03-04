@@ -122,11 +122,11 @@ public:
     void delectRankingMapBoids();
 
     ///// fonction Utile /////
-    void updateNew(vector<Boid2d*> *otherBoids, vector<vector<ofVec2f>> *fieldVector);
+    void updateNew(list<Boid2d*> *otherBoids, vector<vector<ofVec2f>> *fieldVector);
     //void updateNew( const float amount, vector<Boid2d*> *otherBoids, vector<vector<ofVec2f>> *fieldVector);
         
 private:
-    float* flockfullNew(float *vec, vector<Boid2d*> *otherBoids);
+    float* flockfullNew(float *vec, list<Boid2d*> *otherBoids);
     float* steer(float* target, float amount);
     float* foncSep(const float dx, const float dy, const float invD, Boid2d *other, float *sep);
     float* foncCohe(const float d, const float variable,Boid2d *other, float *coh);

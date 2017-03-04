@@ -16,12 +16,18 @@ public:
     /////////////////////////////////////// mapBoids////////////////////////////////////
     bool                            isMapBoids;
     vector <Boid2d *>               mapBoid[SegWidth][SegHeight];
-    vector<vector<vector<Boid2d *>>> mapBoids;
+    //vector<vector<vector<Boid2d *>>> mapBoids;
+    vector<vector<list<Boid2d *>>>      mapBoids;
     
     void initMapBoids(){
+        /*
         vector<Boid2d*>     a;
         vector<vector<Boid2d*>>    b = vector<vector<Boid2d *>>(SegHeight,a);
         mapBoids = vector<vector<vector<Boid2d *>>>(SegWidth,b);
+        */
+        list<Boid2d *>      a;
+        vector<list<Boid2d *>>    b= vector<list<Boid2d *>>(SegHeight,a);
+        mapBoids = vector<vector<list<Boid2d *>>>(SegWidth,b);
         isMapBoids = true;
     }
     
@@ -94,20 +100,20 @@ public:
     }
     
     
-    void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids ){
+    void update(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids ){
         for (int i=0; i< vectorThis->size(); i++) {
             vectorThis->at(i)->updateNew(otherBoids, &vectorField);
         }
     }
     
-    void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
+    void update(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
         for (int i =0; i<vectorThis->size(); i++) {
             vectorThis->at(i)->updateNew(otherBoids, _vectorField);
         }
     }
     
     void updateSimple(){
-        update(&totalBoid, &totalBoid);
+        //update(&totalBoid, &totalBoid);
     }
     
 ///////////////////////////////// Bounds //////////////////////////////////
