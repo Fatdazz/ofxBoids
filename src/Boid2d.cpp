@@ -54,7 +54,8 @@ void Boid2d::bounds() {
     }
     
 }
-void Boid2d:: updateNew(list<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
+/*
+void Boid2d:: updateNew(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
     
     if (flockPtr->isMapBoids) {
         delectRankingMapBoids();
@@ -114,7 +115,52 @@ void Boid2d:: updateNew(list<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_f
         addRankingMapBoids();
     }
 }
-float* Boid2d::flockfullNew(float *vec, list<Boid2d*> *otherBoids) {
+*/
+void Boid2d::update(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
+    
+
+    acceleration.x = 0;
+    acceleration.y = 0;
+    float *vec = new float[2];
+    vec[0] = 0.0f;
+    vec[1] = 0.0f;
+    flockfullNew(vec, otherBoids);
+    
+    acceleration.x += vec[0];// *amount;
+    acceleration.y += vec[1];// *amount;
+    delete [] vec;
+    
+    if (flockPtr->isVectorField) {
+        
+        acceleration = acceleration+(_fieldVector->at(
+                                                      trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1))))
+                                     .at(
+                                         trunc(max(0.0f, min((float) this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)))))
+        /10;
+        
+        
+    }
+    
+    float distMaxForce = ABS(acceleration.x) + ABS(acceleration.y);
+    if (distMaxForce > maxForce) {
+        distMaxForce = maxForce / distMaxForce;
+        acceleration *= distMaxForce;
+    }
+    velocite += acceleration;
+    // limit speed
+    float distMaxSpeed = ABS(velocite.x) + ABS(velocite.y);
+    if (distMaxSpeed > maxSpeed) {
+        distMaxSpeed = maxSpeed / distMaxSpeed;
+        velocite *= distMaxSpeed;
+    }
+    position += velocite * flockPtr->dt;
+
+    bounds();
+
+}
+
+
+float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
     
     float *sep = new float[2];
     float *ali = new float[2];
@@ -132,7 +178,7 @@ float* Boid2d::flockfullNew(float *vec, list<Boid2d*> *otherBoids) {
     int countsep = 0, countali = 0, countcoh = 0;
     float invD = 0;
     
-    for (list<Boid2d*>::iterator i =otherBoids->begin(); i != otherBoids->end(); i++) {
+    for (vector<Boid2d*>::iterator i =otherBoids->begin(); i != otherBoids->end(); i++) {
         Boid2d * other =  i.operator*();
         if (this->groupPtr == other->groupPtr) {
             

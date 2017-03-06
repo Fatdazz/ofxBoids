@@ -87,7 +87,7 @@ public:
         b->setMaxForce(_maxForce);
         b->setMaxSpeed(_maxSpeed);
         totalBoid.push_back(b);
-        b->addRankingMapBoids();
+        //b->addRankingMapBoids();
     }
     void destroyBoidsGroups(){
     /// a faire ou pas
@@ -100,15 +100,22 @@ public:
     }
     
     
-    void update(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids ){
+    void updateNew(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids ){
+        otherBoids->size();
         for (int i=0; i< vectorThis->size(); i++) {
             vectorThis->at(i)->updateNew(otherBoids, &vectorField);
         }
     }
     
-    void update(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
+    void updateNew(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
         for (int i =0; i<vectorThis->size(); i++) {
             vectorThis->at(i)->updateNew(otherBoids, _vectorField);
+        }
+    }
+    
+    void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
+        for (int i =0; i<vectorThis->size(); i++) {
+            vectorThis->at(i)->update(otherBoids, _vectorField);
         }
     }
     
