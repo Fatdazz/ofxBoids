@@ -14,7 +14,7 @@ public:
     bool lead;
     int group;
     
-    ofVec2f position, velocite, acceleration;
+    ofVec2f position, velocite, acceleration, positionInitiale;
     float separateGroup, alignGroup, cohesionGroup;
     float distSeparationGroup, distAlignGroup, distCohesionGroup;
     float maxTurnAlex, maxSpeed, maxForce;
@@ -24,6 +24,8 @@ public:
     
     Flock2d * flockPtr;
     GroupBoid2d * groupPtr;
+
+    bool active;
     ///////////////////////////////////////////////////////////////////
     
     

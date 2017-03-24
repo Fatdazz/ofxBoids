@@ -136,16 +136,13 @@ public:
             setValsGlobalBoid(_alig,_distAlig,_sepa,_distSepa,_cohe, _distCohe, i);
         }
     }
+
     void setValsGlobalBoid(float _alig, float _distAlig,float _sepa, float _distSepa,float _cohe, float _distCohe, int _at){
         setValsAligBoid(_alig, _distAlig,_at);
         setValsCoheBoid(_cohe, _distCohe, _at);
         setValsSepaBoid(_sepa, _distSepa, _at);
-
     }
-    
-    
 
-    
     void addRegle(){
         vectorRegle.push_back(Regle());
     }
@@ -161,6 +158,7 @@ public:
         
         }
     }
+
     void actAllRegle(int _group){  /// ne pas utilisé mm pbm que _group!=_noGroup
         for (int i=0; i<vectorRegle.size(); i++) {
             vectorRegle[i].actRegle();
