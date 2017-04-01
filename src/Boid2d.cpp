@@ -7,6 +7,8 @@ Boid2d::Boid2d(Flock2d * _flock, GroupBoid2d * _group) {
     Boid2d();
     this->flockPtr = _flock;
     this->groupPtr = _group;
+
+    active = false;
 }
 Boid2d::Boid2d(Flock2d * _flock){
     Boid2d();
@@ -56,7 +58,9 @@ void Boid2d::bounds() {
 }
 void Boid2d::update(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
     
-
+  if(!active) {
+    return;
+  }
     acceleration.x = 0;
     acceleration.y = 0;
     float *vec = new float[2];
@@ -232,3 +236,4 @@ float * Boid2d::foncAlig(Boid2d *other, float *ali){
     ali[1] += other->velocite.y * other->alignGroup;
     return ali;
 }
+

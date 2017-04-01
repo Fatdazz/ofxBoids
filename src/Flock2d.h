@@ -81,6 +81,7 @@ public:
     void addBoid(ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
         Boid2d * b = new Boid2d(this);
         b->setLoc(_position);
+	b->positionInitiale = _position;
         b->setValSepa(_sepa, _distSepa);
         b->setValCohe(_cohe, _distCohe);
         b->setValAlig(_alig, _distAlig);
