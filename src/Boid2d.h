@@ -14,7 +14,7 @@ public:
     bool lead;
     int group;
     
-    ofVec2f position, velocite, acceleration;
+    ofVec2f ref, position, velocite, acceleration;
     float separateGroup, alignGroup, cohesionGroup;
     float distSeparationGroup, distAlignGroup, distCohesionGroup;
     float maxTurnAlex, maxSpeed, maxForce;
@@ -29,7 +29,7 @@ public:
     
     Boid2d() {
         //x = y = vx = vy = ax = ay = 0.0f;
-        position = velocite = acceleration = ofVec2f(0, 0);
+        ref = position = velocite = acceleration = ofVec2f(0, 0);
         life = 1;
         flockPtr = NULL;
         groupPtr = NULL;
@@ -45,6 +45,7 @@ public:
         maxForce = 10.0f;
         attractionAlex = 100.5f;
         attractiondeviationAlex =0.0f;
+        lead =true;
     }
     Boid2d(Flock2d * flock, GroupBoid2d * _group);
     Boid2d(Flock2d * flock);
@@ -117,14 +118,10 @@ public:
     /*
      * main funcs
      */
-    
-    void addRankingMapBoids();
-    void delectRankingMapBoids();
+
 
     ///// fonction Utile /////
-    void updateNew(list<Boid2d*> *otherBoids, vector<vector<ofVec2f>> *fieldVector);
-    //void updateNew( const float amount, vector<Boid2d*> *otherBoids, vector<vector<ofVec2f>> *fieldVector);
-    void update(vector<Boid2d*> *otherBoids,vector<vector<ofVec2f>> *fieldVector);
+       void update(vector<Boid2d*> *otherBoids,vector<vector<ofVec2f>> *fieldVector);
         
 private:
     float* flockfullNew(float *vec, vector<Boid2d*> *otherBoids);

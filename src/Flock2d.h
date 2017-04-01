@@ -99,23 +99,12 @@ public:
         return totalBoid.size();
     }
     
-    
-    void updateNew(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids ){
-        otherBoids->size();
-        for (int i=0; i< vectorThis->size(); i++) {
-            vectorThis->at(i)->updateNew(otherBoids, &vectorField);
-        }
-    }
-    
-    void updateNew(vector<Boid2d *> *vectorThis, list<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
-        for (int i =0; i<vectorThis->size(); i++) {
-            vectorThis->at(i)->updateNew(otherBoids, _vectorField);
-        }
-    }
-    
     void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
         for (int i =0; i<vectorThis->size(); i++) {
-            vectorThis->at(i)->update(otherBoids, _vectorField);
+            Boid2d *b = vectorThis->at(i);
+            if (b->lead) {
+                b->update(otherBoids, _vectorField);
+            }
         }
     }
     

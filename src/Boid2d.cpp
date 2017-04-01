@@ -54,68 +54,6 @@ void Boid2d::bounds() {
     }
     
 }
-/*
-void Boid2d:: updateNew(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
-    
-    if (flockPtr->isMapBoids) {
-        delectRankingMapBoids();
-    }
-    
-    acceleration.x = 0;
-    acceleration.y = 0;
-    float *vec = new float[2];
-    vec[0] = 0.0f;
-    vec[1] = 0.0f;
-    //flockfull(amount, vec, &flockPtr->mapBoid[i][j]);
-    flockfullNew(vec, otherBoids);
-    
-    acceleration.x += vec[0];// *amount;
-    acceleration.y += vec[1];// *amount;
-    delete [] vec;
-    
-    
-    if (flockPtr->isVectorField) {
-        
-        acceleration = acceleration+(_fieldVector->at(
-                                                      trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1))))
-                                     .at(
-                                         trunc(max(0.0f, min((float) this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)))))
-        /10;
-        
-        
-    }
-    
-    float distMaxForce = ABS(acceleration.x) + ABS(acceleration.y);
-    if (distMaxForce > maxForce) {
-        distMaxForce = maxForce / distMaxForce;
-        acceleration *= distMaxForce;
-    }
-    velocite += acceleration;
-    // limit speed
-    float distMaxSpeed = ABS(velocite.x) + ABS(velocite.y);
-    if (distMaxSpeed > maxSpeed) {
-        distMaxSpeed = maxSpeed / distMaxSpeed;
-        velocite *= distMaxSpeed;
-    }
-    position += velocite * flockPtr->dt;
-    
-    //x += ((rand()%200)-100)/100 * 5;
-    //y += ((rand()%200)-100)/100 * 5;
-    bounds();
-    // reset acc on end
-    //	ax = 0;
-    //	ay = 0;
-    
-    if (position.x < 0 || position.x > flockPtr->maxX) {
-        cout << " il y a " << position.x << endl;
-        
-    }
-    
-    if (flockPtr->isMapBoids) {
-        addRankingMapBoids();
-    }
-}
-*/
 void Boid2d::update(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fieldVector){
     
 
@@ -158,8 +96,6 @@ void Boid2d::update(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fie
     bounds();
 
 }
-
-
 float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
     
     float *sep = new float[2];
@@ -248,8 +184,6 @@ float* Boid2d::flockfullNew(float *vec, vector<Boid2d*> *otherBoids) {
     delete[] attrForce;
     return vec;
 }
-
-
 float * Boid2d::steer(float* target, float amount){ //, float *steervec) {
     
     //	float steer[] = {0.f, 0.f}; //new float[2];
@@ -297,37 +231,4 @@ float * Boid2d::foncAlig(Boid2d *other, float *ali){
     ali[0] += other->velocite.x * other->alignGroup;
     ali[1] += other->velocite.y * other->alignGroup;
     return ali;
-}
-void Boid2d:: addRankingMapBoids(){
-    int _x = trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1)));
-    int _y = trunc(max(0.0f, min((float) this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)));
-    flockPtr->mapBoids[_x][_y].push_back(this);
-}
-void Boid2d::delectRankingMapBoids(){
-    
-    int _x = trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1)));
-    int _y = trunc(max(0.0f, min((float)this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)));
-    
-    for(list<Boid2d*>::iterator iter=flockPtr->mapBoids[_x][_y].begin() ; iter != flockPtr->mapBoids[_x][_y].end(); iter++) {
-        /*
-        flockPtr->mapBoids[_x][_y];
-        
-        //iter.operator*();
-        
-        cout << this << "      " << iter.operator*()<< endl;
-        iter++;
-        cout << this << "      " << iter.operator*()<< endl;
-
-        
-        if (this ==  iter.operator*()) {
-            
-            
-            //flockPtr->mapBoids[_x][_y].erase(flockPtr->mapBoids[_x][_y].begin()+i);
-            flockPtr->mapBoids[_x][_y].erase(iter);
-         
-        }
-         */
-        cout << "X: "<< _x << "    Y: " << _y << endl;
-        cout << this << "      " << iter.operator*()<< endl;
-    }
 }
