@@ -103,9 +103,9 @@ public:
     void update(vector<Boid2d *> *vectorThis, vector<Boid2d *> *otherBoids, vector<vector<ofVec2f>> *_vectorField){
         for (int i =0; i<vectorThis->size(); i++) {
             Boid2d *b = vectorThis->at(i);
-            if (b->lead) {
-                b->update(otherBoids, _vectorField);
-            }
+            
+            b->update(otherBoids, _vectorField);
+            
         }
     }
     
