@@ -2,7 +2,7 @@
 #include "Boid2d.h"
 #include "Flock2d.h"
 #include "ofMain.h"
-
+#include "Constant.h"
 Boid2d::Boid2d(Flock2d * _flock, GroupBoid2d * _group) {
     Boid2d();
     this->flockPtr = _flock;
@@ -73,12 +73,10 @@ void Boid2d::update(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fie
     delete [] vec;
     
     if (flockPtr->isVectorField) {
-        
-        acceleration = acceleration+(_fieldVector->at(
-                                                      trunc(max(0.0f, min((float)this->position.x *(SegWidth)/flockPtr->maxX,(float)SegWidth-1))))
+        acceleration = acceleration+ 2*(_fieldVector->at(
+                                                      trunc(max(0.0f, min((float)this->position.x/divGrad_width,(float)(win_width/divGrad_width)-1))))
                                      .at(
-                                         trunc(max(0.0f, min((float) this->position.y *(SegHeight)/flockPtr->maxY,(float)SegHeight-1)))))
-        /10;
+                                         trunc(max(0.0f, min((float) this->position.y/divGrad_height,(float)(win_height/divGrad_height)-1)))));
         
         
     }

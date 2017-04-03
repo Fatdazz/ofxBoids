@@ -15,20 +15,20 @@ public:
     
     /////////////////////////////////////// mapBoids////////////////////////////////////
     bool                            isMapBoids;
-    vector <Boid2d *>               mapBoid[SegWidth][SegHeight];
+    //vector <Boid2d *>               mapBoid[SegWidth][SegHeight];
     //vector<vector<vector<Boid2d *>>> mapBoids;
-    vector<vector<list<Boid2d *>>>      mapBoids;
+    //vector<vector<list<Boid2d *>>>      mapBoids;
     
     void initMapBoids(){
         /*
         vector<Boid2d*>     a;
         vector<vector<Boid2d*>>    b = vector<vector<Boid2d *>>(SegHeight,a);
         mapBoids = vector<vector<vector<Boid2d *>>>(SegWidth,b);
-        */
+        
         list<Boid2d *>      a;
         vector<list<Boid2d *>>    b= vector<list<Boid2d *>>(SegHeight,a);
         mapBoids = vector<vector<list<Boid2d *>>>(SegWidth,b);
-        isMapBoids = true;
+        isMapBoids = true;*/
     }
     
     
@@ -81,12 +81,13 @@ public:
     void addBoid(ofVec2f _position,float _sepa, float _distSepa, float _cohe, float _distCohe, float _alig, float _distAlig, float _maxForce, float _maxSpeed){
         Boid2d * b = new Boid2d(this);
         b->setLoc(_position);
-	b->positionInitiale = _position;
+        b->positionInitiale = _position;
         b->setValSepa(_sepa, _distSepa);
         b->setValCohe(_cohe, _distCohe);
         b->setValAlig(_alig, _distAlig);
         b->setMaxForce(_maxForce);
         b->setMaxSpeed(_maxSpeed);
+        b->active=false;
         totalBoid.push_back(b);
         //b->addRankingMapBoids();
     }
