@@ -73,7 +73,7 @@ void Boid2d::update(vector<Boid2d *>  *otherBoids, vector<vector<ofVec2f>> *_fie
     delete [] vec;
     
     if (flockPtr->isVectorField) {
-        acceleration = acceleration+ 2*(_fieldVector->at(
+        acceleration = acceleration+ (_fieldVector->at(
                                                       trunc(max(0.0f, min((float)this->position.x/divGrad_width,(float)(win_width/divGrad_width)-1))))
                                      .at(
                                          trunc(max(0.0f, min((float) this->position.y/divGrad_height,(float)(win_height/divGrad_height)-1)))));
